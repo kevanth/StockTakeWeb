@@ -1,12 +1,8 @@
 "use client";
 import { useState } from "react";
+import Item from "@/class/Item";
 
-interface ItemProps {
-	name: string;
-	initialCount: number;
-}
-
-export default function Item({name, initialCount}:ItemProps) {
+export default function ItemTile({name, initialCount}:Item) {
   const [count,setCount] = useState(initialCount)
   const buttonClass = "border-1 border-border hover:bg-border aspect-square w-8"
   
@@ -22,9 +18,9 @@ export default function Item({name, initialCount}:ItemProps) {
               setCount(Number(val))
             }
           }}
-          className="border px-2 py-1 my2 rounded "
+          className="border px-2 py-1 my-2 rounded "
         />
-      <div className="flex gap-2">
+      <div className="flex gap-2 my-2">
         <button className={buttonClass} onClick={()=>{setCount((count == 0)?0:count - 1)}}>-</button>
         <button className={buttonClass} onClick={()=>{setCount(count + 1)}}>+</button>
       </div>
