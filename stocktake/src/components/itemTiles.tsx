@@ -9,7 +9,7 @@ export default function ItemTile({name, initialCount}:Item) {
   return (
     <div className="flex flex-col items-center border text-textPrimary border-border p-4 rounded bg-secondary aspect-square">
         <p className="text-lg font-bold">{name}</p>
-        <input
+        <input  //So far only changing visually and not changing actual value of item count
           type="text"
           value={count}
           onChange={(e) => {

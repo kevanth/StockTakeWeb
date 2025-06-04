@@ -1,12 +1,18 @@
+"use client";
+import { useEffect, useState } from "react";
 import ItemTile from "../components/itemTiles";
 import Item from "@/class/Item";
 
 export default function Home() {
-  const itemArr: Item[] = [
-    { name: "Tissue", initialCount: 1 },
-    { name: "Water", initialCount: 5 },
-    { name: "Snacks", initialCount: 2 },
-  ];
+  const [itemArr, setItemsArr] = useState<Item[]>([]);
+
+  useEffect(() => {
+    setItemsArr([
+			{ name: "Tissue", initialCount: 1 },
+			{ name: "Water", initialCount: 5 },
+			{ name: "Snacks", initialCount: 2 },
+		]);
+  },[])
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-3 gap-[10%] bg-background w-[80%] mx-auto mt-10" >
@@ -17,8 +23,10 @@ export default function Home() {
           initialCount={item.initialCount}
         />
       ))}
-
-      <ItemTile name="tissue" initialCount={1}></ItemTile>
+        <button className="text-7xl flex justify-center items-center border text-textPrimary border-border p-4 rounded bg-secondary aspect-square hover:bg-tertiary hover:font-bold active:bg-">
+        +
+        </button>
+        {/* </div> */}
     </div>
   );
 }
