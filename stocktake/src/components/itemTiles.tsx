@@ -18,7 +18,8 @@ export default function ItemTile({name, initialCount}:Item) {
               setCount(Number(val))
             }
           }}
-          className="border px-2 py-1 my-2 rounded "
+          maxLength={5}
+          className="border-border border-1 px-2 py-1 my-2 rounded w-auto max-w-[8ch]"
         />
       <div className="flex gap-2 my-2">
         <button className={buttonClass} onClick={()=>{setCount((count == 0)?0:count - 1)}}>-</button>
