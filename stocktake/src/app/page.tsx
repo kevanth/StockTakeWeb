@@ -5,6 +5,7 @@ import Item from "@/class/Item";
 
 export default function Home() {
   const [itemArr, setItemsArr] = useState<Item[]>([]);
+  const [addItemPopup, setAddItemPopup] = useState(false);
 
   useEffect(() => {
     setItemsArr([
@@ -25,9 +26,22 @@ export default function Home() {
           initialCount={item.initialCount}
         />
       ))}
-        <button className="text-7xl flex justify-center items-center border text-textPrimary border-border p-4 rounded bg-secondary aspect-square hover:bg-tertiary hover:font-bold active:bg-">
+      {!addItemPopup ?
+        <button 
+        onClick={()=>{setAddItemPopup(true)}}
+        className="text-7xl flex justify-center items-center border text-textPrimary border-border p-4 rounded bg-secondary aspect-square hover:bg-tertiary hover:font-bold active:bg-">
         +
         </button>
+        :
+        <div className="flex flex-col items-center border text-textPrimary border-border p-4 rounded bg-secondary aspect-square">
+          <input  
+          type="text"
+          placeholder="Item Name"
+          className="border-border border-1 px-2 py-1 my-2 rounded w-auto "
+        />
+        </div>
+        }
+      
         {/* </div> */}
     </div>
   );
