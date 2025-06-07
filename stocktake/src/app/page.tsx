@@ -2,13 +2,18 @@
 import { useEffect, useState } from "react";
 import ItemTile from "../components/itemTiles";
 import Item from "@/class/Item";
+import ItemForm from "@/components/itemForm";
 
 export default function Home() {
   const [itemArr, setItemsArr] = useState<Item[]>([]);
   const [addItemPopup, setAddItemPopup] = useState(false);
 
   useEffect(() => {
-    setItemsArr([
+    setItemsArr([ 
+      /**
+       * TEMP SOLUTION
+       * Thinking of using API to call and store once by save button - easiest solution rn
+       */
 			{ name: "Tissue", initialCount: 1 },
 			{ name: "Water", initialCount: 5 },
 			{ name: "Snacks", initialCount: 2 },
@@ -33,13 +38,7 @@ export default function Home() {
         +
         </button>
         :
-        <div className="flex flex-col items-center border text-textPrimary border-border p-4 rounded bg-secondary aspect-square">
-          <input  
-          type="text"
-          placeholder="Item Name"
-          className="border-border border-1 px-2 py-1 my-2 rounded w-auto "
-        />
-        </div>
+        <ItemForm></ItemForm>
         }
       
         {/* </div> */}
