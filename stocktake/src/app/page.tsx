@@ -7,6 +7,10 @@ import ItemForm from "@/components/itemForm";
 export default function Home() {
   const [itemArr, setItemsArr] = useState<Item[]>([]);
   const [addItemPopup, setAddItemPopup] = useState(false);
+  const handleAddNewItem = (item : Item) : void => {
+      setItemsArr(itemArr => [...itemArr, item]);
+      setAddItemPopup(false)
+  }
 
   useEffect(() => {
     setItemsArr([ 
@@ -38,10 +42,9 @@ export default function Home() {
         +
         </button>
         :
-        <ItemForm></ItemForm>
+        <ItemForm onSubmit={handleAddNewItem}></ItemForm>
         }
       
-        {/* </div> */}
     </div>
   );
 }

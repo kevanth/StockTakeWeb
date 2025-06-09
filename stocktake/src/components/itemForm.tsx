@@ -2,22 +2,23 @@
 import { useState } from "react";
 import Item from "@/class/Item";
 
-export default function ItemForm() {
+
+export default function ItemForm({onSubmit}: {onSubmit: (item : Item) => void}) {
   const [itemName,setItemName] = useState("")
   const [quantity,setQuantity] = useState(0)
 
     const handleSubmit = (e: React.FormEvent) => {
-        e.preventDefault(); // prevent page reload
-        console.log('Item Name:', itemName);
-        console.log('Quantity:', quantity);
-
-        // Add your submission logic here
-        alert(`Submitted: ${itemName} x${quantity}`);
+        e.preventDefault(); 
+        const newItem = new Item(itemName, quantity);
+        onSubmit(newItem);
+        setItemName('');
+        setQuantity(0);
     };
   
   return (
     <div className="flex flex-col items-center border text-textPrimary border-border p-4 rounded bg-secondary aspect-square">
 		<form onSubmit={handleSubmit} className="flex flex-col w-fit">
+            {/* Item Name input */}
 			<input
 				type="text"
 				placeholder="Item Name"
@@ -25,7 +26,7 @@ export default function ItemForm() {
 				value={itemName}
 				onChange={(e) => setItemName(e.target.value)}
 			/>
-
+            {/* Item Quantity input */}
 			<input
 				type="text"
 				placeholder="Quantity"
@@ -50,7 +51,7 @@ export default function ItemForm() {
 				type="button"
 				onClick={() => {
 					setItemName('');
-					setQuantity('');
+					setQuantity(0);
 				}}
 				className="border px-4 py-2 my-2 rounded bg-red-500 text-white hover:bg-red-600"
 			>
