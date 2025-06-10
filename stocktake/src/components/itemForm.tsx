@@ -35,7 +35,7 @@ export default function ItemForm({onSubmit}: {onSubmit: (item : Item) => void}) 
 				onChange={(e) => {
 					const val = e.target.value;
 					if (/^\d*$/.test(val)) {
-						setQuantity(val);
+						setQuantity(Number(val));
 					}
 				}}
 			/>

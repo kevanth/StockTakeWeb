@@ -7,10 +7,12 @@ import ItemForm from "@/components/itemForm";
 export default function Home() {
   const [itemArr, setItemsArr] = useState<Item[]>([]);
   const [addItemPopup, setAddItemPopup] = useState(false);
+
   const handleAddNewItem = (item : Item) : void => {
       setItemsArr(itemArr => [...itemArr, item]);
       setAddItemPopup(false)
   }
+
 
   useEffect(() => {
     setItemsArr([ 
@@ -30,9 +32,8 @@ export default function Home() {
     <div className="grid grid-cols-1 md:grid-cols-4 gap-[8%] bg-background w-[80%] mx-auto mt-10" >
       {itemArr.map((item, index) => (
         <ItemTile
-          key={index}
-          name={item.name}
-          initialCount={item.initialCount}
+          key = {index}
+          item = {new Item(item.name, item.initialCount)}
         />
       ))}
       {!addItemPopup ?

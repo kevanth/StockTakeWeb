@@ -2,14 +2,25 @@
 import { useState } from "react";
 import Item from "@/class/Item";
 
-export default function ItemTile({name, initialCount}:Item) {
-  const [count,setCount] = useState(initialCount)
+interface itemItleProps {
+  item : Item;
+}
+
+export default function ItemTile({item}:itemItleProps) {
+  const [count,setCount] = useState(item.initialCount)
+  const [itemName, setItemName] = useState(item.name)
   const buttonClass = "border-1 border-border hover:bg-border aspect-square w-8"
+
   
   return (
     <div className="flex flex-col items-center border text-textPrimary border-border p-4 rounded bg-secondary aspect-square">
-        <p className="text-lg font-bold">{name}</p>
-        <input  //So far only changing visually and not changing actual value of item count
+        <input
+          type="text"
+          value={itemName}
+          className="text-lg font-bold"
+          onChange={(e)=>{setItemName(e.target.value)}}
+        />
+        <input 
           type="text"
           value={count}
           onChange={(e) => {
