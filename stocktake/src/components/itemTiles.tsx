@@ -13,7 +13,7 @@ export default function ItemTile({item}:itemItleProps) {
 
   
   return (
-    <div className="flex flex-col items-center border text-textPrimary border-border p-4 rounded bg-secondary aspect-square">
+    <div className="flex flex-col items-center border text-foreground border-border p-4 rounded bg-card aspect-square">
         <input
           type="text"
           value={itemName}
