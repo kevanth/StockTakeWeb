@@ -39,7 +39,6 @@ export default function Inventory() {
       {!addItemPopup ?
         <button 
         onClick={()=>{setAddItemPopup(true)}}
-        on
         className="text-7xl flex justify-center items-center border text-textPrimary border-border p-4 rounded bg-secondary aspect-square hover:bg-tertiary hover:font-bold active:bg-">
         +
         </button>
