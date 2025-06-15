@@ -20,13 +20,13 @@ export default function Login() {
 		})
 
 		setLoading(false)
-
+        console.log("Status code:", res.status)
 		if (res.ok) {
 			// ✅ Login successful – redirect to /inventory
 			// window.location.href = '/inventory'
 		} else {
 			const data = await res.json()
-			setError(data.error || 'Something went wrong')
+			setError(data.error || 'Something went wrong') 
 		}
 	}
 
@@ -79,6 +79,11 @@ export default function Login() {
                         Login
                     </button>
                 </form>
+                {error && (
+                    <div className="text-red-500 text-sm">
+                        {error}
+                    </div>
+                    )}
             </div>
         </div>
     )
