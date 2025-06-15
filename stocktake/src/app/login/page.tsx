@@ -1,5 +1,7 @@
 "use client";
 
+import { useRouter } from "next/navigation" 
+
 import { useState } from "react"
 
 export default function Login() {
@@ -8,27 +10,29 @@ export default function Login() {
 	const [error, setError] = useState('')
 	const [loading, setLoading] = useState(false)
     
+    const router = useRouter()
+
     const handleLogin = async (e: React.FormEvent) => {
-		e.preventDefault()
-		setLoading(true)
-		setError('')
-
-		const res = await fetch('/api/auth/login', {
-			method: 'POST',
-			headers: { 'Content-Type': 'application/json' },
-			body: JSON.stringify({ email, password }),
-		})
-
-		setLoading(false)
-        console.log("Status code:", res.status)
-		if (res.ok) {
-			// ✅ Login successful – redirect to /inventory
-			// window.location.href = '/inventory'
-		} else {
-			const data = await res.json()
-			setError(data.error || 'Something went wrong') 
-		}
-	}
+        e.preventDefault()
+        setLoading(true)
+        setError("")
+    
+        const res = await fetch("/api/auth/login", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ email, password }),
+        })
+    
+        setLoading(false)
+    
+        if (res.ok) {
+            router.push("/inventory")
+        } else {
+            const data = await res.json()
+            setError(data.error || "Something went wrong")
+        }
+    }
+    
 
 
     return(

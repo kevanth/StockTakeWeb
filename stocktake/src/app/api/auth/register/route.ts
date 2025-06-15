@@ -1,15 +1,15 @@
 import { NextResponse } from "next/server"
-import { registerUser } from "@/lib/auth/register"
+import { registerUser } from "@/lib/auth"
 
 export async function POST(req: Request) {
 	try {
-		const { email, password } = await req.json()
+		const { username, email, password } = await req.json()
 
-		if (!email || !password) {
+		if (!email || !password || !username) {
 			return NextResponse.json({ error: "Missing fields" }, { status: 400 })
 		}
 
-		await registerUser(email, password)
+		await registerUser(username, email, password)
 
 		return NextResponse.json({ success: true }, { status: 201 })
 	} catch (err: any) {

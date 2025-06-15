@@ -4,24 +4,25 @@ import bcrypt from "bcryptjs"
 export async function loginUser(email: string, password: string) {
 	const { data: user, error } = await supabase
 		.from("users")
-		.select("id, password_hash")
+		.select("username, password_hash")
 		.eq("email", email)
 		.single()
 
 	if (error || !user) throw new Error("Invalid email or password") 
-
+	console.log("user found")
 	const isValid = await bcrypt.compare(password, user.password_hash)
-	if (!isValid) throw new Error("Invalid email or password")
+	if (!isValid) throw new Error("Incorrect password")
 
-	return { userId: user.id }
+	return { userId: user.username }
 }
 
-export async function registerUser(email: string, password: string) {
+export async function registerUser(username: string, email: string, password: string) {
 	const salt = await bcrypt.genSalt(10)
 	const hashedPassword = await bcrypt.hash(password, salt)
 
 	const { error } = await supabase.from("users").insert([
-		{
+		{	
+			username,
 			email,
 			password_hash: hashedPassword,
 		},

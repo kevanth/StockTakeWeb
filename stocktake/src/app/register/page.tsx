@@ -4,6 +4,7 @@ import { useState } from "react"
 
 export default function Register() {
 	const [email, setEmail] = useState("")
+	const [username, setUsername] = useState("")
 	const [password, setPassword] = useState("")
 	const [error, setError] = useState("")
 	const [loading, setLoading] = useState(false)
@@ -16,7 +17,7 @@ export default function Register() {
 		const res = await fetch("/api/auth/register", {
 			method: "POST",
 			headers: { "Content-Type": "application/json" },
-			body: JSON.stringify({ email, password }),
+			body: JSON.stringify({ username, email, password}),
 		})
 
 		setLoading(false)
@@ -46,6 +47,19 @@ export default function Register() {
 
 				<form onSubmit={handleRegister} className="flex flex-col gap-2">
 					<div className="flex flex-col gap-1">
+						<label>Username</label>
+						<input
+							className="rounded-sm border-2 border-accent p-1"
+							id="username"
+							type="text"
+							value={username}
+							onChange={(e) => setUsername(e.target.value)}
+							placeholder="m@example.com"
+							required
+						/>
+					</div>
+
+                    <div className="flex flex-col gap-1">
 						<label>Email</label>
 						<input
 							className="rounded-sm border-2 border-accent p-1"
