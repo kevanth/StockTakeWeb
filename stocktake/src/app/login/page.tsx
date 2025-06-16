@@ -78,16 +78,15 @@ export default function Login() {
                     </div>
 
                     <button 
+                    disabled={loading}
                     type="submit"
-                    className="w-full rounded-sm border-2 bg-accent-foreground text-accent">
+                    className="w-full rounded-sm border-2 bg-accent-foreground text-accent disabled:bg-card">
                         Login
                     </button>
                 </form>
-                {error && (
-                    <div className="text-red-500 text-sm">
-                        {error}
-                    </div>
-                    )}
+                <div className="min-h-[1.25rem] text-error text-sm">
+                    {error}
+                </div>
             </div>
         </div>
     )
