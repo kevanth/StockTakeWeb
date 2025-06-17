@@ -9,7 +9,7 @@ export async function loginUser(email: string, password: string) {
 		.single()
 
 	if (error || !user) throw new Error("Invalid email or password") 
-	console.log("user found")
+	
 	const isValid = await bcrypt.compare(password, user.password_hash)
 	if (!isValid) throw new Error("Incorrect password")
 
