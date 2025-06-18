@@ -1,4 +1,3 @@
-import { addItemAndRefresh } from "@/app/inventory/actions";
 import Item from "@/class/Item";
 import { addItem, getItems } from "@/lib/items";
 import { NextResponse } from "next/server";
@@ -25,7 +24,7 @@ export async function POST(req: Request) {
 	try {
 		const { username, name, count } = await req.json();
 
-		const item = new Item(name, count);
+		const item = new Item(0, name, count);
 		await addItem(username, item);
 
 		return NextResponse.json({ success: true }, { status: 200 });
