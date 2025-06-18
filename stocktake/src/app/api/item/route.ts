@@ -1,5 +1,6 @@
+import { addItemAndRefresh } from "@/app/inventory/actions";
 import Item from "@/class/Item";
-import { getItems } from "@/lib/items";
+import { addItem, getItems } from "@/lib/items";
 import { NextResponse } from "next/server";
 
 export async function GET(req: Request) {
@@ -17,5 +18,19 @@ export async function GET(req: Request) {
 	} catch (error) {
 		console.error("Error fetching items:", error);
 		return NextResponse.json({ error: "Failed to fetch items" }, { status: 500 });
+	}
+}
+
+export async function POST(req: Request) {
+	try {
+		const { username, name, count } = await req.json();
+
+		const item = new Item(name, count);
+		await addItem(username, item);
+
+		return NextResponse.json({ success: true }, { status: 200 });
+	} catch (error: any) {
+		console.error("API error:", error);
+		return NextResponse.json({ error: error.message }, { status: 500 });
 	}
 }

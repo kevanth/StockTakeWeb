@@ -7,7 +7,7 @@ interface itemItleProps {
 }
 
 export default function ItemTile({item}:itemItleProps) {
-  const [count,setCount] = useState(item.initialCount)
+  const [count,setCount] = useState(item.count)
   const [itemName, setItemName] = useState(item.name)
   const buttonClass = "border-1 border-border hover:bg-border aspect-square w-8"
 

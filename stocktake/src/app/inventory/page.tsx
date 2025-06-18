@@ -1,26 +1,27 @@
 "use client";
+
 import { useEffect, useState } from "react";
 import ItemTile from "@/components/itemTiles";
 import AddItemButtonOrForm from "@/components/AddItemButtonOrForm";
 import Item from "@/class/Item";
 
 export default function Inventory() {
-	const [items, setItems] = useState<Item[]>([]); // Replace 'any' with your item type if you have one
+	const [items, setItems] = useState<Item[]>([]);
 	const [loading, setLoading] = useState(true);
 
-	useEffect(() => {
-		const fetchItems = async () => {
-			try {
-				const res = await fetch("/api/item?username=test");
-				const data = await res.json();
-				setItems(data.items);
-			} catch (error) {
-				console.error("Failed to fetch items:", error);
-			} finally {
-				setLoading(false);
-			}
-		};
+	const fetchItems = async () => {
+		try {
+			const res = await fetch("/api/item?username=test");
+			const data = await res.json();
+			setItems(data.items);
+		} catch (error) {
+			console.error("Failed to fetch items:", error);
+		} finally {
+			setLoading(false);
+		}
+	};
 
+	useEffect(() => {
 		fetchItems();
 	}, []);
 
@@ -33,7 +34,7 @@ export default function Inventory() {
 					{items.map((item, index) => (
 						<ItemTile key={index} item={item} />
 					))}
-					<AddItemButtonOrForm />
+					<AddItemButtonOrForm refreshItems={fetchItems} />
 				</>
 			)}
 		</div>
