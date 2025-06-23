@@ -1,6 +1,7 @@
 "use client";
 import { useState } from "react";
 import Item from "@/class/Item";
+import { deleteItem } from "@/lib/clientItems";
 
 interface itemItleProps {
   item : Item;
@@ -14,18 +15,21 @@ export default function ItemTile({item}:itemItleProps) {
   
   return (
     <div className="flex flex-col items-center border text-foreground border-border p-4 rounded bg-card aspect-square">
-        <input
-          type="text"
-          value={itemName}
-          className="text-lg font-bold"
-          onChange={(e)=>{setItemName(e.target.value)}}
-        />
+        <div className="flex flex-row w-full">
+            <input
+            type="text"
+            value={itemName}
+            className="text-lg font-bold"
+            onChange={(e)=>{setItemName(e.target.value)}}
+          />
+          <button className={buttonClass} onClick={()=>deleteItem(item.id)}>X</button>
+        </div>
         <input 
           type="text"
           value={count}
           onChange={(e) => {
-            const val = e.target.value
-            if (/^\d*$/.test(val)) {
+              const val = e.target.value
+              if (/^\d*$/.test(val)) {
               setCount(Number(val))
             }
           }}
