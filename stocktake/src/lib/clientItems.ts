@@ -1,5 +1,5 @@
 export async function deleteItem(id: number) {
-	const res = await fetch('/api/item?id=' + id, {
+	const res = await fetch('/api/item/' + id, {
 		method: 'DELETE',
 		headers: { 'Content-Type': 'application/json' },
 		body: JSON.stringify({ id }),

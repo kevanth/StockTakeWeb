@@ -1,5 +1,5 @@
 import Item from "@/class/Item";
-import { addItem, deleteItem, getItems } from "@/lib/items";
+import { addItem, getItems } from "@/lib/items";
 import { NextResponse } from "next/server";
 
 export async function GET(req: Request) {
@@ -32,20 +32,4 @@ export async function POST(req: Request) {
 		console.error("API error:", error);
 		return NextResponse.json({ error: error.message }, { status: 500 });
 	}
-}
-
-export async function DELETE(req: Request) {
-	try{
-		const { searchParams } = new URL(req.url);
-		const id = searchParams.get('id');
-		if (!id) return new Response("Missing ID", { status: 400 });
-	
-		await deleteItem(Number(id));
-		return new Response(JSON.stringify({ success: true }));
-
-	} catch (error: any) {
-		console.error("API error:", error);
-		return NextResponse.json({ error: error.message }, { status: 500 });
-	}
-	
 }
