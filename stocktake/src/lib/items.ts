@@ -57,3 +57,4 @@ export async function deleteItem(id: number): Promise<void> {
 		throw new Error("Delete failed: " + error.message);
 	}
 }
+
