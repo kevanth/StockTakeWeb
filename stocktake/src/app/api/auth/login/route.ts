@@ -8,7 +8,7 @@ export async function POST(req: Request) {
 		const result = await loginUser(email, password)
 
 		const res = NextResponse.json({ success: true })
-		res.cookies.set('auth_token', result.userId, {
+		res.cookies.set('auth_token', result.token, {
 			httpOnly: true,
 			path: '/',
 			sameSite: 'lax',

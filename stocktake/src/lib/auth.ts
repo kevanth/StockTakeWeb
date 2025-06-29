@@ -1,10 +1,11 @@
 import { supabase } from "@/lib/db"
 import bcrypt from "bcryptjs"
+import { generateToken } from "./jwt"
 
-export async function loginUser(email: string, password: string) {
+export async function loginUser(email: string, password: string): Promise<{ token: string; userId: string }> {
 	const { data: user, error } = await supabase
 		.from("users")
-		.select("username, password_hash")
+		.select("username, email, password_hash")
 		.eq("email", email)
 		.single()
 
@@ -13,10 +14,17 @@ export async function loginUser(email: string, password: string) {
 	const isValid = await bcrypt.compare(password, user.password_hash)
 	if (!isValid) throw new Error("Incorrect password")
 
-	return { userId: user.username }
+	//genereate token 
+	const token =  await generateToken({
+		sub: user.username,
+		email: user.email
+	});
+	
+
+	return { token, userId: user.username }
 }
 
-export async function registerUser(username: string, email: string, password: string) {
+export async function registerUser(username: string, email: string, password: string): Promise<{ success: boolean }> {
 	const salt = await bcrypt.genSalt(10)
 	const hashedPassword = await bcrypt.hash(password, salt)
 

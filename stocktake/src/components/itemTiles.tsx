@@ -23,13 +23,15 @@ export default function ItemTile({ item }: itemTileProps) {
 		}, 500) // 500ms after last change
 	).current;
 
-	useEffect(() => {
-		if (isInitialMount.current) {
-			isInitialMount.current = false;
-			return;
-		}
-		debouncedUpdate(itemName, count);
-	}, [itemName, count]);
+// eslint-disable-next-line react-hooks/exhaustive-deps
+useEffect(() => {
+	if (isInitialMount.current) {
+		isInitialMount.current = false;
+		return;
+	}
+	debouncedUpdate(itemName, count);
+}, [itemName, count]);
+
 
 	const buttonClass = "border-1 border-border hover:bg-border aspect-square w-8";
 
