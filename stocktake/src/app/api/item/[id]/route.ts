@@ -23,11 +23,12 @@ export async function DELETE(
 
 export async function PUT(
 	req: Request,
-	{ params }: { params: { id: string } }  // `id` comes from the URL
+	context: { params: { id: string } }  // `id` comes from the URL
 ) {
 	try {
 		const { name, count } = await req.json(); // get updated fields from body
-		const id = Number(params.id);
+		const params = await context.params;
+		const id = Number(params.id)
 
 		if (isNaN(id) || !name || count === undefined) {
 			return NextResponse.json({ error: "Invalid input" }, { status: 400 });
