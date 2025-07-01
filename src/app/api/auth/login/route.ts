@@ -12,8 +12,8 @@ export async function POST(req: Request) {
 			httpOnly: true,
 			path: '/',
 			sameSite: 'lax',
-			secure: process.env.NODE_ENV === 'production',
-		})
+			secure: process.env.NODE_ENV === 'production'
+		});
 
 		return res
 	} catch (err) {

@@ -1,17 +1,20 @@
 import Item from "@/class/Item";
 import { addItem, getItems } from "@/lib/items";
+import { verifyToken } from "@/lib/jwt";
 import { NextResponse } from "next/server";
 
 export async function GET(req: Request) {
-	const { searchParams } = new URL(req.url);
-	const username = searchParams.get("username");
+	const token = req.headers.get("authorization")?.split(" ")[1];
+	if (!token) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
+	const payload = await verifyToken(token);
+	const username = payload.sub;
+	
 	if (!username) {
 		return NextResponse.json({ error: "Username is required" }, { status: 400 });
 	}
 
 	try {
-        console.log("username: " + username)
 		const items:Item[] = await getItems(username);
 		return NextResponse.json({ items }, { status: 200 });
 	} catch (error) {
@@ -21,8 +24,12 @@ export async function GET(req: Request) {
 }
 
 export async function POST(req: Request) {
+	const username = req.headers.get("username")
+	if (!username) {
+		return NextResponse.json({ error: "Username is required" }, { status: 400 });
+	}
 	try {
-		const { username, name, count } = await req.json();
+		const {  name, count } = await req.json();
 
 		const item = new Item(0, name, count);
 		await addItem(username, item);

@@ -14,7 +14,6 @@ export default function AddItemButtonOrForm({ refreshItems }: { refreshItems: ()
 						method: "POST",
 						headers: { "Content-Type": "application/json" },
 						body: JSON.stringify({
-							username: "test",
 							name: item.name,
 							count: item.count,
 						}),

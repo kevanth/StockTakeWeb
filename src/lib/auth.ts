@@ -10,16 +10,16 @@ export async function loginUser(email: string, password: string): Promise<{ toke
 		.single()
 
 	if (error || !user) throw new Error("Invalid email or password") 
-	
 	const isValid = await bcrypt.compare(password, user.password_hash)
 	if (!isValid) throw new Error("Incorrect password")
-
-	//genereate token 
+	console.log("Generating token")
+	//generate token 
 	const token =  await generateToken({
 		sub: user.username,
 		email: user.email
 	});
 	
+	console.log("Generated token")
 
 	return { token, userId: user.username }
 }
