@@ -1,14 +1,9 @@
 import Item from "@/class/Item";
 import { addItem, getItems } from "@/lib/items";
-import { verifyToken } from "@/lib/jwt";
 import { NextResponse } from "next/server";
 
 export async function GET(req: Request) {
-	const token = req.headers.get("authorization")?.split(" ")[1];
-	if (!token) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-
-	const payload = await verifyToken(token);
-	const username = payload.sub;
+	const username = req.headers.get("x-username")
 	
 	if (!username) {
 		return NextResponse.json({ error: "Username is required" }, { status: 400 });
@@ -24,7 +19,7 @@ export async function GET(req: Request) {
 }
 
 export async function POST(req: Request) {
-	const username = req.headers.get("username")
+	const username = req.headers.get("x-username")
 	if (!username) {
 		return NextResponse.json({ error: "Username is required" }, { status: 400 });
 	}

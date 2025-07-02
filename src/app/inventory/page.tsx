@@ -12,7 +12,7 @@ export default function Inventory() {
 
 	const fetchItems = async () => {
 		try {
-			const res = await fetch("/api/item");
+			const res = await fetch("/api/item")
 			if (!res.ok){
 				const errorBody = await res.json();
 				console.error("API error:", errorBody.error);
