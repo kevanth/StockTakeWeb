@@ -26,6 +26,10 @@ export async function PUT(
 	context: { params: { id: string } }  // `id` comes from the URL
 ) {
 	try {
+		const username = req.headers.get("x-username")
+		if (!username) {
+			return NextResponse.json({ error: "Username is required" }, { status: 400 });
+		}
 		const { name, count } = await req.json(); // get updated fields from body
 		const params = await context.params;
 		const id = Number(params.id)
@@ -35,7 +39,7 @@ export async function PUT(
 		}
 
 		const updatedItem = new Item(id, name, count);
-		await updateItem("test",updatedItem);
+		await updateItem(username,updatedItem);
 
 		return NextResponse.json({ success: true });
 	} catch (error: any) {

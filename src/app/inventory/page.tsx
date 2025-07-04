@@ -33,18 +33,20 @@ export default function Inventory() {
 	}, []);
 
 	return (
-		<div className="grid grid-cols-1 md:grid-cols-4 gap-[8%] bg-background w-[80%] mx-auto mt-10">
-			<Toaster richColors position="top-right" />
-			{loading ? (
-				<div className="col-span-full text-center">Loading...</div>
-			) : (
-				<>
-					{items.map((item, index) => (
-						<ItemTile key={index} item={item} />
-					))}
-					<AddItemButtonOrForm refreshItems={fetchItems} />
-				</>
-			)}
+		<div>
+			<Toaster/>
+			<div className="grid grid-cols-1 md:grid-cols-4 gap-[8%] bg-background w-[80%] mx-auto mt-10">
+				{loading ? (
+					<div className="col-span-full text-center">Loading...</div>
+				) : (
+					<>
+						{items.map((item, index) => (
+							<ItemTile key={index} item={item} />
+						))}
+						<AddItemButtonOrForm refreshItems={fetchItems} />
+					</>
+				)}
+			</div>
 		</div>
 	);
 }

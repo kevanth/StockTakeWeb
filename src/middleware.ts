@@ -1,7 +1,6 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import { verifyToken } from "@/lib/jwt";
-import { error } from "console";
 
 export async function middleware(req: NextRequest) {
     const token = req.cookies.get("auth_token")?.value;
@@ -13,7 +12,7 @@ export async function middleware(req: NextRequest) {
 	try {
 		const payload = await verifyToken(token); 
 		const username = payload.sub
-		if(!username){throw(error("Token payload did not contain username"))}
+		if(!username){throw(Error("Token payload did not contain username"))}
 		const res =  NextResponse.next();
 		res.headers.set("x-username",username)
 		return res;
