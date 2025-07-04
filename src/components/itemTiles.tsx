@@ -3,12 +3,15 @@ import { useState, useEffect, useRef } from "react";
 import Item from "@/class/Item";
 import { deleteItem, updateItem } from "@/lib/clientItems";
 import debounce from "lodash/debounce"; // or use a custom one
+import { toast } from "sonner";
 
 interface itemTileProps {
 	item: Item;
+	refreshItems : () => void
+	toast: ()=>void
 }
 
-export default function ItemTile({ item }: itemTileProps) {
+export default function ItemTile({ item, refreshItems }: itemTileProps, ) {
 	const [count, setCount] = useState(item.count);
 	const [itemName, setItemName] = useState(item.name);
 	const isInitialMount = useRef(true);
@@ -18,7 +21,9 @@ export default function ItemTile({ item }: itemTileProps) {
 			try {
 				await updateItem(new Item(item.id, name, count));
 			} catch (err) {
-				console.error("Update failed", err);
+				const message = err instanceof Error ? err.message : "Unexpected error";
+				console.error(message);
+				toast(message)
 			}
 		}, 500) // 500ms after last change
 	).current;
@@ -44,7 +49,10 @@ useEffect(() => {
 					className="text-lg font-bold"
 					onChange={(e) => setItemName(e.target.value)}
 				/>
-				<button className={buttonClass} onClick={() => deleteItem(item.id)}>X</button>
+				<button className={buttonClass} 
+				onClick={() => {
+				deleteItem(item.id);
+				refreshItems();}}>X</button>
 			</div>
 			<input
 				type="text"

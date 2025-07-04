@@ -41,7 +41,7 @@ export default function Inventory() {
 				) : (
 					<>
 						{items.map((item, index) => (
-							<ItemTile key={index} item={item} />
+							<ItemTile key={index} item={item} refreshItems={fetchItems} toast={toast.error}/>
 						))}
 						<AddItemButtonOrForm refreshItems={fetchItems} />
 					</>
