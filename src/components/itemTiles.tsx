@@ -3,15 +3,14 @@ import { useState, useEffect, useRef } from "react";
 import Item from "@/class/Item";
 import { deleteItem, updateItem } from "@/lib/clientItems";
 import debounce from "lodash/debounce"; // or use a custom one
-import { toast } from "sonner";
 
 interface itemTileProps {
 	item: Item;
 	refreshItems : () => void
-	toast: ()=>void
+	toast: (message:string) => void
 }
 
-export default function ItemTile({ item, refreshItems }: itemTileProps, ) {
+export default function ItemTile({ item, refreshItems, toast }: itemTileProps, ) {
 	const [count, setCount] = useState(item.count);
 	const [itemName, setItemName] = useState(item.name);
 	const isInitialMount = useRef(true);
@@ -23,7 +22,8 @@ export default function ItemTile({ item, refreshItems }: itemTileProps, ) {
 			} catch (err) {
 				const message = err instanceof Error ? err.message : "Unexpected error";
 				console.error(message);
-				toast(message)
+				toast(message);
+				refreshItems();
 			}
 		}, 500) // 500ms after last change
 	).current;
