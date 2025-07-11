@@ -12,7 +12,7 @@ export async function getItems(username: string): Promise<Item[]> {
 		throw new Error("Fetch failed: " + error.message);
 	}
 
-	return data?.map(row => new Item(row.id, row.name, row.quantity)) || [];
+	return data?.map(row => new Item(row.id, row.name, row.quantity, row.category, row.description)) || [];
 }
 
 export async function addItem(username: string, item: Item): Promise<void> {
@@ -35,11 +35,13 @@ export async function updateItem(username: string, item: Item): Promise<void> {
 		.update({
 			name: item.name,
 			quantity: item.count,
+			category: item.category,
+			description: item.description,
 			last_updated: new Date().toISOString(),
 		})
 		.eq("id", item.id)
 		.eq("owner", username); // Optional: enforce ownership
-
+	
 	if (error) {
 		console.error("Update failed:", error.message, error.details);
 		throw new Error("Update failed: " + error.message);

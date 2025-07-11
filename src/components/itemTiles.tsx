@@ -13,12 +13,14 @@ interface itemTileProps {
 export default function ItemTile({ item, refreshItems, toast }: itemTileProps, ) {
 	const [count, setCount] = useState(item.count);
 	const [itemName, setItemName] = useState(item.name);
+	const [category, setCategory] = useState(item.category);
+	const [description, setDescription] = useState(item.description);
 	const isInitialMount = useRef(true);
 
 	const debouncedUpdate = useRef(
-		debounce(async (name: string, count: number) => {
+		debounce(async (name: string, count: number, category: string, description: string) => {
 			try {
-				await updateItem(new Item(item.id, name, count));
+				await updateItem(new Item(item.id, name, count, category, description));
 			} catch (err) {
 				const message = err instanceof Error ? err.message : "Unexpected error";
 				console.error(message);
@@ -34,8 +36,8 @@ useEffect(() => {
 		isInitialMount.current = false;
 		return;
 	}
-	debouncedUpdate(itemName, count);
-}, [itemName, count]);
+	debouncedUpdate(itemName, count, category, description);
+}, [itemName, count, category, description, category]);
 
 
 	const buttonClass = "border-1 border-border hover:bg-border aspect-square w-8";
@@ -54,6 +56,18 @@ useEffect(() => {
 				deleteItem(item.id);
 				refreshItems();}}>X</button>
 			</div>
+			<input
+				type="text"
+				value={category}
+				className="text-lg font-bold"
+				onChange={(e) => setCategory(e.target.value)}
+			/>
+			<input
+				type="text"
+				value={description}
+				className="text-lg font-bold"
+				onChange={(e) => setDescription(e.target.value)}
+			/>
 			<input
 				type="text"
 				value={count}

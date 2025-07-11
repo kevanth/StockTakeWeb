@@ -11,6 +11,9 @@ export async function deleteItem(id: number) {
 }
 
 export async function updateItem(item: Item) {
+
+	console.log("API CALL: " + item.category)
+	console.log("API CALL: " )
 	const res = await fetch(`/api/item/${item.id}`, {
 		method: "PUT",
 		headers: {
@@ -18,10 +21,11 @@ export async function updateItem(item: Item) {
 		},
 		body: JSON.stringify({
 			name: item.name,
-			count: item.count
+			count: item.count,
+			description: item.description,
+			category: item.category
 		})
 	});
-
 	if (!res.ok) {
 		const err = await res.json();
 		throw new Error("Failed to update item: " + err.error);

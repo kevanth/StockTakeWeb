@@ -30,7 +30,7 @@ export async function PUT(
 		if (!username) {
 			return NextResponse.json({ error: "Username is required" }, { status: 400 });
 		}
-		const { name, count } = await req.json(); // get updated fields from body
+		const { name, count, category, description } = await req.json(); // get updated fields from body
 		const params = await context.params;
 		const id = Number(params.id)
 
@@ -38,7 +38,7 @@ export async function PUT(
 			return NextResponse.json({ error: "Invalid input" }, { status: 400 });
 		}
 
-		const updatedItem = new Item(id, name, count);
+		const updatedItem = new Item(id, name, count, category, description);
 		await updateItem(username,updatedItem);
 
 		return NextResponse.json({ success: true });
