@@ -23,7 +23,6 @@ export default function ItemTile({ item, refreshItems, toast }: itemTileProps, )
 				await updateItem(new Item(item.id, name, count, category, description));
 			} catch (err) {
 				const message = err instanceof Error ? err.message : "Unexpected error";
-				console.error(message);
 				toast(message);
 				refreshItems();
 			}
@@ -45,23 +44,37 @@ useEffect(() => {
 	return (
 		<div className="flex flex-col items-center border text-foreground border-border p-4 rounded bg-card aspect-square">
 			<div className="flex flex-row w-full">
+				<div className="flex flex-row flex-1 min-w-0">
+					<input
+						type="text"
+						value={itemName}
+						size={itemName.length}
+						placeholder="Name"
+						maxLength={20} 
+						className="max-w-full min-w-0 text-lg font-bold"
+						onChange={(e) => setItemName(e.target.value)}
+					/>
 				<input
 					type="text"
-					value={itemName}
-					className="text-lg font-bold"
-					onChange={(e) => setItemName(e.target.value)}
+					value={category}
+					placeholder="Category"
+					maxLength={10}
+					className={
+						(category
+							? "border-red-900 text-red-900"
+							: "border-accent text-accent") +
+						" border-2 px-1 py-0 text-lg font-bold rounded w-auto max-w-[10ch] truncate"
+					}
+					onChange={(e) => setCategory(e.target.value)}
 				/>
-				<button className={buttonClass} 
-				onClick={() => {
-				deleteItem(item.id);
-				refreshItems();}}>X</button>
+				</div>
+				<button className={buttonClass +" ml-1"} 
+					onClick={() => {
+					deleteItem(item.id);
+					refreshItems();}}>X</button>
 			</div>
-			<input
-				type="text"
-				value={category}
-				className="text-lg font-bold"
-				onChange={(e) => setCategory(e.target.value)}
-			/>
+			
+				
 			<input
 				type="text"
 				value={description}

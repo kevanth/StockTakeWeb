@@ -57,7 +57,7 @@ export default function Inventory() {
 			<div
 				className={`${
 					view !== "Card" || loading ? "hidden" : ""
-				} grid grid-cols-1 md:grid-cols-4 gap-[8%] bg-background w-[80%] mx-auto mt-10`}
+				} grid grid-cols-[repeat(auto-fit,minmax(240px,1fr))] gap-6 bg-background w-full max-w-screen-xl mx-auto mt-10 px-4`}
 			>
 				{items.map((item) => (
 					<ItemTile
