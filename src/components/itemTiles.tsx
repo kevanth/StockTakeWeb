@@ -8,14 +8,17 @@ interface itemTileProps {
 	item: Item;
 	refreshItems : () => void
 	toast: (message:string) => void
+	getCategories: () => Promise<string[]>;
 }
 
-export default function ItemTile({ item, refreshItems, toast }: itemTileProps, ) {
+export default function ItemTile({ item, refreshItems, toast, getCategories }: itemTileProps, ) {
 	const [count, setCount] = useState(item.count);
 	const [itemName, setItemName] = useState(item.name);
 	const [category, setCategory] = useState(item.category);
 	const [description, setDescription] = useState(item.description);
 	const isInitialMount = useRef(true);
+	const [editingCategory, setEditingCategory] = useState(false);
+	const [categoryOptions, setCategoryOptions] = useState<string[]>([]);
 
 	const debouncedUpdate = useRef(
 		debounce(async (name: string, count: number, category: string, description: string) => {
@@ -29,22 +32,35 @@ export default function ItemTile({ item, refreshItems, toast }: itemTileProps, )
 		}, 500) // 500ms after last change
 	).current;
 
-// eslint-disable-next-line react-hooks/exhaustive-deps
-useEffect(() => {
-	if (isInitialMount.current) {
-		isInitialMount.current = false;
-		return;
-	}
-	debouncedUpdate(itemName, count, category, description);
-}, [itemName, count, category, description, category]);
+	const categoryToggle = async () => {
+		if (categoryOptions.length === 0) {
+			const cats = await getCategories();
+			setCategoryOptions(Array.isArray(cats) ? cats : []);
+
+			console.log("Fetched categories:", cats);
+			console.log(Array.isArray(cats) ? cats : [])
+		}
+
+		setEditingCategory(true);
+	};
+
+
+	// eslint-disable-next-line react-hooks/exhaustive-deps
+	useEffect(() => {
+		if (isInitialMount.current) {
+			isInitialMount.current = false;
+			return;
+		}
+		debouncedUpdate(itemName, count, category, description);
+	}, [itemName, count, category, description, category]);
 
 
 	const buttonClass = "border-1 border-border hover:bg-border aspect-square w-8";
 
 	return (
 		<div className="flex flex-col items-center border text-foreground border-border p-4 rounded bg-card aspect-square">
-			<div className="flex flex-row w-full">
-				<div className="flex flex-row flex-1 min-w-0">
+			<div className="flex flex-row w-full ">
+				<div className="flex flex-row flex-1 min-w-0 items-center">
 					<input
 						type="text"
 						value={itemName}
@@ -54,19 +70,34 @@ useEffect(() => {
 						className="max-w-full min-w-0 text-lg font-bold"
 						onChange={(e) => setItemName(e.target.value)}
 					/>
-				<input
-					type="text"
-					value={category}
-					placeholder="Category"
-					maxLength={10}
-					className={
-						(category
-							? "border-red-900 text-red-900"
-							: "border-accent text-accent") +
-						" border-2 px-1 py-0 text-lg font-bold rounded w-auto max-w-[10ch] truncate"
-					}
-					onChange={(e) => setCategory(e.target.value)}
-				/>
+					{/* Categories */}
+					<div className="relative flex items-center">
+						<button
+						className="border-2 rounded px-2 py-1 text-sm max-w-full truncate"
+						onClick={()=>categoryToggle()}>
+							{category||"category"}
+						</button>
+						{/* Drop down categories */}
+						{editingCategory &&
+							<div className="absolute top-full mt-1 w-64 bg-muted border rounded shadow-md z-50">
+										<p className="text-sm text-muted-foreground px-3 pt-2">Select an option or create one</p>
+										<ul className="px-3 pb-2 space-y-1">
+											{categoryOptions.map((opt) => (
+												<li
+													key={opt}
+													className="flex items-center justify-between text-sm px-2 py-1 rounded cursor-pointer hover:bg-accent"
+													onClick={() => {
+														setCategory(opt);
+														setEditingCategory(false);
+													}}
+												>
+													<span>{opt}</span>
+												</li>
+											))}
+										</ul>
+									</div>
+						}
+					</div>
 				</div>
 				<button className={buttonClass +" ml-1"} 
 					onClick={() => {

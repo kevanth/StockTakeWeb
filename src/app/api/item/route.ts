@@ -27,7 +27,7 @@ export async function POST(req: Request) {
 	try {
 		const {  name, count } = await req.json();
 
-		const item = new Item(0, name, count);
+		const item = new Item(0, name, count, "", "");
 		await addItem(username, item);
 
 		return NextResponse.json({ success: true }, { status: 200 });

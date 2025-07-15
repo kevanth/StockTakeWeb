@@ -15,6 +15,20 @@ export async function getItems(username: string): Promise<Item[]> {
 	return data?.map(row => new Item(row.id, row.name, row.quantity, row.category, row.description)) || [];
 }
 
+export async function getCategories(username: string): Promise<string[]> {
+		const { data, error } = await supabase
+		.from("items")
+		.select("category")
+		.eq("owner", username);
+
+	if (error) {
+		console.error("Fetch failed:", error.message, error.details);
+		throw new Error("Fetch failed: " + error.message);
+	}
+
+	return data?.map(row => row.category) || [];
+}
+
 export async function addItem(username: string, item: Item): Promise<void> {
 	const { error } = await supabase.from("items").insert({
 		owner: username,

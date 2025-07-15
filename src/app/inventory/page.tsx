@@ -31,6 +31,24 @@ export default function Inventory() {
 		}
 	};
 
+	const fetchCategories = async () => {
+		try {
+			const res = await fetch("/api/category");
+			if (!res.ok) {
+				const errorBody = await res.json();
+				console.error("API error:", errorBody.error);
+				throw new Error(errorBody.error || "Request failed");
+			}
+			const data = await res.json();
+			return data.categories;
+		} catch (error) {
+			const message = error instanceof Error ? error.message : "Unexpected error";
+			toast.error(message);
+		} finally {
+			setLoading(false);
+		}
+	};
+
 	useEffect(() => {
 		fetchItems();
 	}, []);
@@ -65,6 +83,7 @@ export default function Inventory() {
 						item={item}
 						refreshItems={fetchItems}
 						toast={toast.error}
+						getCategories={fetchCategories}
 					/>
 				))}
 				<AddItemButtonOrForm refreshItems={fetchItems} />

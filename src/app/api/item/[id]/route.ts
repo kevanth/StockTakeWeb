@@ -12,7 +12,6 @@ export async function DELETE(
 		if (isNaN(id)) {
 			return NextResponse.json({ error: "Invalid ID" }, { status: 400 });
 		}
-
 		await deleteItem(id);
 		return NextResponse.json({ success: true });
 	} catch (error: any) {
