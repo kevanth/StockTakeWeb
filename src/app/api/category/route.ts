@@ -12,8 +12,7 @@ export async function GET(req: Request) {
         const categories:string[] = await getCategories(username);
         return NextResponse.json({ categories }, { status: 200 });
     } catch (error) {
-        console.error("Error fetching items:", error);
-        
-        return NextResponse.json({ error: "Failed to fetch items: " + error.message }, { status: 500 });
+		const message = error instanceof Error ? error.message : "Unexpected error";
+        return NextResponse.json({ error: "Failed to fetch categories: " + message }, { status: 500 });
     }
 }

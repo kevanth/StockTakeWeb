@@ -14,9 +14,9 @@ export async function DELETE(
 		}
 		await deleteItem(id);
 		return NextResponse.json({ success: true });
-	} catch (error: any) {
-		console.error("DELETE error:", error);
-		return NextResponse.json({ error: error.message }, { status: 500 });
+	} catch (error: unknown) {
+		const message = error instanceof Error ? error.message : "Unexpected error";
+		return NextResponse.json({ error: "Failed to delete item: " + message }, { status: 500 });
 	}
 }
 
@@ -41,9 +41,9 @@ export async function PUT(
 		await updateItem(username,updatedItem);
 
 		return NextResponse.json({ success: true });
-	} catch (error: any) {
-		console.error("PUT error:", error);
-		return NextResponse.json({ error: error.message }, { status: 500 });
+	} catch (error: unknown) {
+		const message = error instanceof Error? error.message : "Unexpected error";
+		return NextResponse.json({ error: "Failed to update item: " + message }, { status: 500 });
 	}
 }
 

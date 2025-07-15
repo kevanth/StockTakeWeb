@@ -12,10 +12,9 @@ export async function GET(req: Request) {
 	try {
 		const items:Item[] = await getItems(username);
 		return NextResponse.json({ items }, { status: 200 });
-	} catch (error) {
-		console.error("Error fetching items:", error);
-		
-		return NextResponse.json({ error: "Failed to fetch items: " + error.message }, { status: 500 });
+	} catch (error: unknown) {
+		const message = error instanceof Error ? error.message : "Unexpected error";
+		return NextResponse.json({ error: "Failed to fetch items: " + message }, { status: 500 });
 	}
 }
 
@@ -31,8 +30,8 @@ export async function POST(req: Request) {
 		await addItem(username, item);
 
 		return NextResponse.json({ success: true }, { status: 200 });
-	} catch (error: any) {
-		console.error("API error:", error);
-		return NextResponse.json({ error: error.message }, { status: 500 });
+	} catch (error: unknown) {
+		const message = error instanceof Error ? error.message : "Unexpected error";
+		return NextResponse.json({ error: "Failed to add items: " + message }, { status: 500 });
 	}
 }
