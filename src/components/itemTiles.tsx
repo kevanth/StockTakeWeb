@@ -2,7 +2,9 @@
 import { useState, useEffect, useRef } from "react";
 import Item from "@/class/Item";
 import { deleteItem, updateItem } from "@/lib/clientItems";
-import debounce from "lodash/debounce"; // or use a custom one
+import debounce from "lodash/debounce"; 
+import { useClickOutside } from "@/lib/hooks/useClickOutside";
+
 
 interface itemTileProps {
 	item: Item;
@@ -18,7 +20,10 @@ export default function ItemTile({ item, refreshItems, toast, getCategories }: i
 	const [description, setDescription] = useState(item.description);
 	const isInitialMount = useRef(true);
 	const [editingCategory, setEditingCategory] = useState(false);
+	const [newCategory, setNewCategory] = useState("");
 	const [categoryOptions, setCategoryOptions] = useState<string[]>([]);
+	const dropdownRef = useRef<HTMLDivElement | null>(null);
+
 
 	const debouncedUpdate = useRef(
 		debounce(async (name: string, count: number, category: string, description: string) => {
@@ -45,14 +50,18 @@ export default function ItemTile({ item, refreshItems, toast, getCategories }: i
 	};
 
 
-	// eslint-disable-next-line react-hooks/exhaustive-deps
 	useEffect(() => {
 		if (isInitialMount.current) {
 			isInitialMount.current = false;
 			return;
 		}
 		debouncedUpdate(itemName, count, category, description);
+	// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [itemName, count, category, description, category]);
+
+	useClickOutside(dropdownRef, () => {
+		setEditingCategory(false);
+	});	
 
 
 	const buttonClass = "border-1 border-border hover:bg-border aspect-square w-8";
@@ -73,30 +82,52 @@ export default function ItemTile({ item, refreshItems, toast, getCategories }: i
 					{/* Categories */}
 					<div className="relative flex items-center">
 						<button
-						className="border-2 rounded px-2 py-1 text-sm max-w-full truncate"
+						className={"border-2 rounded px-2 py-1 text-sm max-w-full truncate" + ((!category)?" text-accent":"")}
 						onClick={()=>categoryToggle()}>
-							{category||"category"}
+							{category||"select category"}
 						</button>
 						{/* Drop down categories */}
-						{editingCategory &&
-							<div className="absolute top-full mt-1 w-64 bg-muted border rounded shadow-md z-50">
-										<p className="text-sm text-muted-foreground px-3 pt-2">Select an option or create one</p>
-										<ul className="px-3 pb-2 space-y-1">
-											{categoryOptions.map((opt) => (
-												<li
-													key={opt}
-													className="flex items-center justify-between text-sm px-2 py-1 rounded cursor-pointer hover:bg-accent"
-													onClick={() => {
-														setCategory(opt);
-														setEditingCategory(false);
-													}}
-												>
-													<span>{opt}</span>
-												</li>
-											))}
-										</ul>
-									</div>
-						}
+						{editingCategory && (
+							<div ref={dropdownRef} className="absolute mt-1 w-64 bg-white border rounded shadow-md z-50">
+								<input
+									autoFocus
+									value={newCategory}
+									onChange={(e) => setNewCategory(e.target.value)}
+									className="w-full px-3 py-2 border-b text-sm outline-none"
+									placeholder="Select or create a category"
+								/>
+								<ul className="max-h-40 overflow-y-auto">
+									{categoryOptions
+										.filter(opt => opt.toLowerCase().includes(newCategory.toLowerCase()))
+										.map((opt) => (
+											<li
+												key={opt}
+												className="px-3 py-2 hover:bg-gray-100 cursor-pointer text-sm"
+												onClick={() => {
+													setCategory(opt);
+													setEditingCategory(false);
+												}}
+											>
+												{opt}
+											</li>
+									))}
+
+									{/* If no match, offer to create */}
+									{!categoryOptions.includes(newCategory) && newCategory.trim() !== "" && (
+										<li
+											className="px-3 py-2 hover:bg-gray-100 cursor-pointer text-sm font-medium text-blue-600"
+											onClick={() => {
+												setCategory(newCategory.trim());
+												setEditingCategory(false);
+											}}
+										>
+											+ Create “{newCategory.trim()}”
+										</li>
+									)}
+								</ul>
+							</div>
+						)}
+
 					</div>
 				</div>
 				<button className={buttonClass +" ml-1"} 

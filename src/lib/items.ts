@@ -19,14 +19,16 @@ export async function getCategories(username: string): Promise<string[]> {
 		const { data, error } = await supabase
 		.from("items")
 		.select("category")
-		.eq("owner", username);
+		.eq("owner", username)
 
 	if (error) {
 		console.error("Fetch failed:", error.message, error.details);
 		throw new Error("Fetch failed: " + error.message);
 	}
+	
+	const uniqueCategories = [...new Set((data ?? []).map(row => row.category))];
 
-	return data?.map(row => row.category) || [];
+	return uniqueCategories;
 }
 
 export async function addItem(username: string, item: Item): Promise<void> {
