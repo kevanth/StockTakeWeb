@@ -26,7 +26,7 @@ export async function getCategories(username: string): Promise<string[]> {
 		throw new Error("Fetch failed: " + error.message);
 	}
 	
-	const uniqueCategories = [...new Set((data ?? []).map(row => row.category))];
+	const uniqueCategories = [...new Set((data ?? []).filter(row => row.category != null).map(row => row.category))];
 
 	return uniqueCategories;
 }

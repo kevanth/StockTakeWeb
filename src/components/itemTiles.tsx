@@ -4,6 +4,7 @@ import Item from "@/class/Item";
 import { deleteItem, updateItem } from "@/lib/clientItems";
 import debounce from "lodash/debounce"; 
 import { useClickOutside } from "@/lib/hooks/useClickOutside";
+import { X } from "lucide-react";
 
 
 interface itemTileProps {
@@ -37,13 +38,14 @@ export default function ItemTile({ item, refreshItems, toast, getCategories }: i
 		}, 500) // 500ms after last change
 	).current;
 
+	const updateCategories = async() => {
+		const cats = await getCategories();
+		setCategoryOptions(Array.isArray(cats) ? cats : []);
+	}
+
 	const categoryToggle = async () => {
 		if (categoryOptions.length === 0) {
-			const cats = await getCategories();
-			setCategoryOptions(Array.isArray(cats) ? cats : []);
-
-			console.log("Fetched categories:", cats);
-			console.log(Array.isArray(cats) ? cats : [])
+			updateCategories()
 		}
 
 		setEditingCategory(true);
@@ -61,6 +63,7 @@ export default function ItemTile({ item, refreshItems, toast, getCategories }: i
 
 	useClickOutside(dropdownRef, () => {
 		setEditingCategory(false);
+		setNewCategory("");
 	});	
 
 
@@ -79,64 +82,71 @@ export default function ItemTile({ item, refreshItems, toast, getCategories }: i
 						className="max-w-full min-w-0 text-lg font-bold"
 						onChange={(e) => setItemName(e.target.value)}
 					/>
-					{/* Categories */}
-					<div className="relative flex items-center">
-						<button
-						className={"border-2 rounded px-2 py-1 text-sm max-w-full truncate" + ((!category)?" text-accent":"")}
-						onClick={()=>categoryToggle()}>
-							{category||"select category"}
-						</button>
-						{/* Drop down categories */}
-						{editingCategory && (
-							<div ref={dropdownRef} className="absolute mt-1 w-64 bg-white border rounded shadow-md z-50">
-								<input
-									autoFocus
-									value={newCategory}
-									onChange={(e) => setNewCategory(e.target.value)}
-									className="w-full px-3 py-2 border-b text-sm outline-none"
-									placeholder="Select or create a category"
-								/>
-								<ul className="max-h-40 overflow-y-auto">
-									{categoryOptions
-										.filter(opt => opt.toLowerCase().includes(newCategory.toLowerCase()))
-										.map((opt) => (
-											<li
-												key={opt}
-												className="px-3 py-2 hover:bg-gray-100 cursor-pointer text-sm"
-												onClick={() => {
-													setCategory(opt);
-													setEditingCategory(false);
-												}}
-											>
-												{opt}
-											</li>
-									))}
 
-									{/* If no match, offer to create */}
-									{!categoryOptions.includes(newCategory) && newCategory.trim() !== "" && (
-										<li
-											className="px-3 py-2 hover:bg-gray-100 cursor-pointer text-sm font-medium text-blue-600"
-											onClick={() => {
-												setCategory(newCategory.trim());
-												setEditingCategory(false);
-											}}
-										>
-											+ Create “{newCategory.trim()}”
-										</li>
-									)}
-								</ul>
-							</div>
-						)}
-
-					</div>
 				</div>
-				<button className={buttonClass +" ml-1"} 
+				<button className={"h-8 w-8 ml-1 hover:text-red-400 hover:bg-red-500/10 flex items-center justify-center"} 
 					onClick={() => {
 					deleteItem(item.id);
-					refreshItems();}}>X</button>
+					refreshItems();}}
+				>
+					<X className="h-4 w-4" />
+				</button>
 			</div>
-			
-				
+			{/* Categories */}
+			<div className="items-start flex relative w-full">
+				<button
+				className={"border-2 rounded-full px-2 py-1 text-sm max-w-full truncate mb-4 " + ((!category)?" text-accent":"")}
+				onClick={()=>categoryToggle()}>
+					{category||"select category"}
+				</button>
+				{/* Drop down categories */}
+				{editingCategory && (
+				<div
+					ref={dropdownRef}
+					className="absolute mt-1 w-64 bg-popover text-popover-foreground border border-border rounded shadow-md z-50"
+				>
+					<input
+						autoFocus
+						value={newCategory}
+						onChange={(e) => setNewCategory(e.target.value)}
+						className="w-full px-3 py-2 border-b border-border text-sm outline-none bg-popover text-popover-foreground placeholder-muted-foreground"
+						placeholder="Select or create a category"
+					/>
+					<ul className="max-h-40 overflow-y-auto">
+						{categoryOptions
+							.filter((opt) =>
+								opt.toLowerCase().includes(newCategory.toLowerCase())
+							)
+							.map((opt) => (
+								<li
+									key={opt}
+									className="px-3 py-2 hover:bg-accent hover:text-accent-foreground cursor-pointer text-sm"
+									onClick={() => {
+										setCategory(opt);
+										setEditingCategory(false);
+									}}
+								>
+									{opt}
+								</li>
+							))}
+
+						{!categoryOptions.includes(newCategory) && newCategory.trim() !== "" && (
+							<li
+								className="px-3 py-2 hover:bg-accent hover:text-accent-foreground cursor-pointer text-sm font-medium text-primary"
+								onClick={() => {
+									setCategory(newCategory.trim());
+									setEditingCategory(false);
+									setNewCategory("");
+									updateCategories();
+								}}
+							>
+								+ Create “{newCategory.trim()}”
+							</li>
+						)}
+					</ul>
+				</div>
+				)}
+			</div>
 			<input
 				type="text"
 				value={description}
