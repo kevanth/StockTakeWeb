@@ -93,7 +93,7 @@ export default function ItemTile({ item, refreshItems, toast, getCategories }: i
 				</button>
 			</div>
 			{/* Categories */}
-			<div className="items-start flex relative w-full">
+			<div className=" relative w-full">
 				<button
 				className={"border-2 rounded-full px-2 py-1 text-sm max-w-full truncate mb-4 " + ((!category)?" text-accent":"")}
 				onClick={()=>categoryToggle()}>
@@ -147,12 +147,15 @@ export default function ItemTile({ item, refreshItems, toast, getCategories }: i
 				</div>
 				)}
 			</div>
-			<input
-				type="text"
-				value={description}
-				className="text-lg font-bold"
-				onChange={(e) => setDescription(e.target.value)}
-			/>
+			{/** Description */}
+			<div className=" relative w-full">
+				<input
+					type="text"
+					value={description}
+					className="text-s"
+					onChange={(e) => setDescription(e.target.value)}
+				/>
+			</div>
 			<input
 				type="text"
 				value={count}

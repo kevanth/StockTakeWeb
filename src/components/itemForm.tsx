@@ -9,7 +9,7 @@ export default function ItemForm({onSubmit}: {onSubmit: (item : Item) => void}) 
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault(); 
-        const newItem = new Item(0, itemName, quantity);
+        const newItem = new Item(0, itemName, quantity, "", "");
         onSubmit(newItem);
         setItemName('');
         setQuantity(0);
