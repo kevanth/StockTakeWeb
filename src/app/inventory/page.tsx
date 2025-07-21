@@ -12,7 +12,6 @@ export default function Inventory() {
 	const [items, setItems] = useState<Item[]>([]);
 	const [loading, setLoading] = useState(true);
 	const [view, setView] = useState("Card");
-
 	const fetchItems = async () => {
 		try {
 			const res = await fetch("/api/item");
@@ -86,7 +85,7 @@ export default function Inventory() {
 						getCategories={fetchCategories}
 					/>
 				))}
-				<AddItemButtonOrForm refreshItems={fetchItems} />
+				<AddItemButtonOrForm refreshItems={fetchItems}/>
 			</div>
 
 			{/* List View */}
