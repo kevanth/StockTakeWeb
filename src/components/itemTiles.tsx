@@ -72,6 +72,7 @@ export default function ItemTile({ item, refreshItems, toast, getCategories }: i
 	return (
 		<div className="flex flex-col items-center border text-foreground border-border p-4 rounded bg-card aspect-square">
 			<div className="flex flex-row w-full ">
+				{/** Item Name */}
 				<div className="flex flex-row flex-1 min-w-0 items-center">
 					<input
 						type="text"
@@ -82,7 +83,6 @@ export default function ItemTile({ item, refreshItems, toast, getCategories }: i
 						className="max-w-full min-w-0 text-lg font-bold"
 						onChange={(e) => setItemName(e.target.value)}
 					/>
-
 				</div>
 				<button className={"h-8 w-8 ml-1 hover:text-red-400 hover:bg-red-500/10 flex items-center justify-center"} 
 					onClick={() => {
@@ -95,7 +95,7 @@ export default function ItemTile({ item, refreshItems, toast, getCategories }: i
 			{/* Categories */}
 			<div className=" relative w-full">
 				<button
-				className={"border-2 rounded-full px-2 py-1 text-sm max-w-full truncate mb-4 " + ((!category)?" text-accent":"")}
+				className={"border-2 my-1 rounded-full px-2.5 py-1 text-sm max-w-full truncate mb-4 " + ((!category)?" text-accent":"")}
 				onClick={()=>categoryToggle()}>
 					{category||"select category"}
 				</button>
@@ -103,7 +103,7 @@ export default function ItemTile({ item, refreshItems, toast, getCategories }: i
 				{editingCategory && (
 				<div
 					ref={dropdownRef}
-					className="absolute mt-1 w-64 bg-popover text-popover-foreground border border-border rounded shadow-md z-50"
+					className="absolute w-64 bg-popover text-popover-foreground border border-border rounded shadow-md z-50"
 				>
 					<input
 						autoFocus

@@ -7,6 +7,8 @@ import Item from "@/class/Item";
 import { Toaster, toast } from "sonner";
 import NavBar from "@/components/NavBar";
 import { List, SquareStack } from "lucide-react";
+import { SidebarProvider } from "@/components/ui/sidebar";
+import { AppSidebar } from "@/components/sidebar";
 
 export default function Inventory() {
 	const [items, setItems] = useState<Item[]>([]);
@@ -54,8 +56,12 @@ export default function Inventory() {
 
 	return (
 		<div>
-			<Toaster />
 			<NavBar />
+			{/* <SidebarProvider>
+				<AppSidebar>
+				</AppSidebar>
+			</SidebarProvider> */}
+			<Toaster />
 			<div className="flex justify-end p-2 w-[80%] mx-auto">
 				<button
 					onClick={() => setView(view === "Card" ? "List" : "Card")}
@@ -65,11 +71,9 @@ export default function Inventory() {
 					{view === "List" && <SquareStack className="h-6 w-6" />}
 				</button>
 			</div>
-
 			{loading && (
 				<div className="w-full text-center mt-10">Loading...</div>
 			)}
-
 			{/* Card View */}
 			<div
 				className={`${
@@ -87,7 +91,6 @@ export default function Inventory() {
 				))}
 				<AddItemButtonOrForm refreshItems={fetchItems}/>
 			</div>
-
 			{/* List View */}
 			<div
 				className={`${
