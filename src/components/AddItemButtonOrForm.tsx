@@ -3,6 +3,7 @@ import { useRef, useState } from "react";
 import ItemForm from "./itemForm"; 
 import Item from "@/class/Item";
 import { useClickOutside } from "@/lib/hooks/useClickOutside";
+import { supabase } from "@/lib/db";
 
 export default function AddItemButtonOrForm({ refreshItems }: { refreshItems: () => void }) {
 	const [showForm, setShowForm] = useState(false);
@@ -15,9 +16,15 @@ export default function AddItemButtonOrForm({ refreshItems }: { refreshItems: ()
 				{showForm &&
 				<ItemForm
 					onSubmit={async (item: Item) => {
+						const { data: { session } } = await supabase.auth.getSession();
+						const headers = {
+							'Content-Type': 'application/json',
+							'Authorization': `Bearer ${session?.access_token}`
+						};
+
 						await fetch("/api/item", {
 							method: "POST",
-							headers: { "Content-Type": "application/json" },
+							headers,
 							body: JSON.stringify({
 								name: item.name,
 								count: item.count,

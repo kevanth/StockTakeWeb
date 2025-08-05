@@ -1,26 +1,29 @@
-import { NextResponse } from "next/server"
-import { registerUser } from "@/lib/auth"
+import { registerUser } from "@/lib/auth";
+import { NextResponse } from 'next/server'
 
 export async function POST(req: Request) {
 	try {
 		const { username, email, password } = await req.json()
 
-		if (!email || !password || !username) {
-			return NextResponse.json({ error: "Missing fields" }, { status: 400 })
-		}
+		const result = await registerUser(username, email, password)
 
-		await registerUser(username, email, password)
-
-		return NextResponse.json({ success: true }, { status: 201 })
-	} catch (err: any) {
+		return NextResponse.json({ 
+			success: true, 
+			user: {
+				id: result.user?.id,
+				email: result.user?.email,
+				username: result.user?.user_metadata?.username
+			}
+		})
+	} catch (err) {
 		const msg = err instanceof Error ? err.message : "Server error"
 
-		// Choose status based on known errors
-		const status = msg === "Email already registered"
-			? 400
+		// 400 status for validation errors vs 500 unknown errors
+		const status = msg.includes("already registered") || msg.includes("Invalid") 
+			? 400 
 			: 500
 
-		console.error("❌ Registration error:", err)
+		console.error("❌ Register error:", err)
 		return NextResponse.json({ error: msg }, { status })
 	}
 }

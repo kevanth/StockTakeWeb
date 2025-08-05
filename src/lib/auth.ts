@@ -1,50 +1,50 @@
 import { supabase } from "@/lib/db"
-import bcrypt from "bcryptjs"
-import { generateToken } from "./jwt"
 
-export async function loginUser(email: string, password: string): Promise<{ token: string; userId: string }> {
-	const { data: user, error } = await supabase
-		.from("users")
-		.select("username, email, password_hash")
-		.eq("email", email)
-		.single()
-
-	if (error || !user) throw new Error("Invalid email or password") 
-	const isValid = await bcrypt.compare(password, user.password_hash)
-	if (!isValid) throw new Error("Incorrect password")
-	console.log("Generating token")
-	//generate token 
-	const token =  await generateToken({
-		sub: user.username,
-		email: user.email
-	});
-	
-	console.log("Generated token")
-
-	return { token, userId: user.username }
-}
-
-export async function registerUser(username: string, email: string, password: string): Promise<{ success: boolean }> {
-	const salt = await bcrypt.genSalt(10)
-	const hashedPassword = await bcrypt.hash(password, salt)
-
-	const { error } = await supabase.from("users").insert([
-		{	
-			username,
-			email,
-			password_hash: hashedPassword,
-		},
-	])
+export async function loginUser(email: string, password: string) {
+	const { data, error } = await supabase.auth.signInWithPassword({
+		email,
+		password
+	})
 
 	if (error) {
-		if (error.code === "23505") {
-			// Unique violation on email
-			throw new Error("Email already registered")
-		}
-
-		console.error("❌ DB insert error:", error)
-		throw new Error("Failed to create user")
+		throw new Error(error.message)
 	}
 
-	return { success: true }
+	return { user: data.user }
+}
+
+export async function registerUser(username: string, email: string, password: string) {
+	const { data, error } = await supabase.auth.signUp({
+		email,
+		password,
+		options: {
+			data: {
+				username: username
+			}
+		}
+	})
+
+	if (error) {
+		throw new Error(error.message)
+	}
+
+	return { user: data.user }
+}
+
+export async function logoutUser() {
+	const { error } = await supabase.auth.signOut()
+	
+	if (error) {
+		throw new Error(error.message)
+	}
+}
+
+export async function getCurrentUser() {
+	const { data: { user }, error } = await supabase.auth.getUser()
+	
+	if (error) {
+		throw new Error(error.message)
+	}
+	
+	return user
 }
