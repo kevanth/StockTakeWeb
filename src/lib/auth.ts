@@ -1,27 +1,29 @@
 import { supabase } from "@/lib/db"
 import bcrypt from "bcryptjs"
 import { generateToken } from "./jwt"
+import { User, Session } from "@supabase/supabase-js";
 
-export async function loginUser(email: string, password: string): Promise<{ token: string; userId: string }> {
-	const { data: user, error } = await supabase
-		.from("users")
-		.select("username, email, password_hash")
-		.eq("email", email)
-		.single()
+export async function loginUser(email: string, password: string): Promise<{
+	user: User;
+	accessToken: string;
+}> { 
+	const { data , error } = await supabase.auth.signInWithPassword({
+			email: email,
+			password: password
+			})
 
-	if (error || !user) throw new Error("Invalid email or password") 
-	const isValid = await bcrypt.compare(password, user.password_hash)
-	if (!isValid) throw new Error("Incorrect password")
-	console.log("Generating token")
-	//generate token 
-	const token =  await generateToken({
-		sub: user.username,
-		email: user.email
-	});
+	if (error || !data.user) throw new Error("Invalid email or password") 
+
+	// console.log("Generating token")
+	// //generate token 
+	// const token =  await generateToken({
+	// 	sub: user.username,
+	// 	email: user.email
+	// });
 	
-	console.log("Generated token")
+	// console.log("Generated token")
 
-	return { token, userId: user.username }
+	return { user: data.user, accessToken: data.session.access_token }
 }
 
 export async function registerUser(username: string, email: string, password: string): Promise<{ success: boolean }> {
