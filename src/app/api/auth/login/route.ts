@@ -7,20 +7,21 @@ export async function POST(req: Request) {
 
 		const result = await loginUser(email, password)
 
-		return NextResponse.json({ 
-			success: true, 
-			user: {
-				id: result.user?.id,
-				email: result.user?.email,
-				username: result.user?.user_metadata?.username
-			}
-		})
-	} catch (err) {
-		const msg = err instanceof Error ? err.message : "Server error"
+		const res = NextResponse.json({ success: true })
+		res.cookies.set('auth_token', result.token, {
+			httpOnly: true,
+			path: '/',
+			sameSite: 'lax',
+			secure: process.env.NODE_ENV === 'production'
+		});
 
-		// 401 status for auth errors vs 500 unknown errors
-		const status = msg.includes("Invalid") || msg.includes("Invalid login credentials") 
-			? 401 
+		return res
+	} catch (err) {
+        const msg = err instanceof Error ? err.message : "Server error"
+
+		// 401 status for known vs 500 unknown errors
+		const status = msg === "Invalid email or password"
+			? 401
 			: 500
 
 		console.error("❌ Login error:", err)

@@ -1,48 +1,29 @@
 import Item from "@/class/Item";
 import { supabase } from "./db";
 
-export async function getItems(boxId?: string): Promise<Item[]> {
-	let query = supabase
+export async function getItems(username: string): Promise<Item[]> {
+	const { data, error } = await supabase
 		.from("items")
 		.select("*")
-		.order("created_at", { ascending: false });
-
-	// If boxId is provided, filter by box
-	if (boxId) {
-		query = query.eq("box_id", boxId);
-	}
-
-	const { data, error } = await query;
+		.eq("owner", username);
 
 	if (error) {
-		console.error("Fetch items failed:", error.message, error.details);
-		throw new Error("Fetch items failed: " + error.message);
+		console.error("Fetch failed:", error.message, error.details);
+		throw new Error("Fetch failed: " + error.message);
 	}
 
-	return data?.map(row => new Item(
-		row.id, 
-		row.name, 
-		row.quantity || 0, 
-		row.category || "", 
-		row.description || ""
-	)) || [];
+	return data?.map(row => new Item(row.id, row.name, row.quantity, row.category, row.description)) || [];
 }
 
-export async function getCategories(boxId?: string): Promise<string[]> {
-	let query = supabase
+export async function getCategories(username: string): Promise<string[]> {
+		const { data, error } = await supabase
 		.from("items")
-		.select("category");
-
-	// If boxId is provided, filter by box
-	if (boxId) {
-		query = query.eq("box_id", boxId);
-	}
-
-	const { data, error } = await query;
+		.select("category")
+		.eq("owner", username)
 
 	if (error) {
-		console.error("Fetch categories failed:", error.message, error.details);
-		throw new Error("Fetch categories failed: " + error.message);
+		console.error("Fetch failed:", error.message, error.details);
+		throw new Error("Fetch failed: " + error.message);
 	}
 	
 	const uniqueCategories = [...new Set((data ?? []).filter(row => row.category != null).map(row => row.category))];
@@ -50,47 +31,48 @@ export async function getCategories(boxId?: string): Promise<string[]> {
 	return uniqueCategories;
 }
 
-export async function addItem(item: Item, boxId: string): Promise<void> {
+export async function addItem(username: string, item: Item): Promise<void> {
 	const { error } = await supabase.from("items").insert({
+		owner: username,
 		name: item.name,
 		quantity: item.count,
-		box_id: boxId,
-		category: item.category,
-		description: item.description
+		last_updated: new Date().toISOString(),
 	});
 
 	if (error) {
-		console.error("Insert item failed:", error.message, error.details);
-		throw new Error("Insert item failed: " + error.message);
+		console.error("Insert failed:", error.message, error.details);
+		throw new Error("Insert failed: " + error.message);
 	}
 }
 
-export async function updateItem(item: Item): Promise<void> {
+export async function updateItem(username: string, item: Item): Promise<void> {
 	const { error } = await supabase
 		.from("items")
 		.update({
 			name: item.name,
 			quantity: item.count,
 			category: item.category,
-			description: item.description
+			description: item.description,
+			last_updated: new Date().toISOString(),
 		})
-		.eq("id", item.id);
+		.eq("id", item.id)
+		.eq("owner", username); // Optional: enforce ownership
 	
 	if (error) {
-		console.error("Update item failed:", error.message, error.details);
-		throw new Error("Update item failed: " + error.message);
+		console.error("Update failed:", error.message, error.details);
+		throw new Error("Update failed: " + error.message);
 	}
 }
 
-export async function deleteItem(id: string): Promise<void> {
+export async function deleteItem(id: number): Promise<void> {
 	const { error } = await supabase
 		.from("items")
 		.delete()
 		.eq("id", id);
 
 	if (error) {
-		console.error("Delete item failed:", error.message, error.details);
-		throw new Error("Delete item failed: " + error.message);
+		console.error("Delete failed:", error.message, error.details);
+		throw new Error("Delete failed: " + error.message);
 	}
 }
 

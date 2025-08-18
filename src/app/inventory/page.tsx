@@ -7,32 +7,15 @@ import Item from "@/class/Item";
 import { Toaster, toast } from "sonner";
 import { List, SquareStack } from "lucide-react";
 import { Sidebar } from "@/components/Sidebar";
-import { useAuth } from "@/lib/auth-context";
-import { supabase } from "@/lib/db";
-import { useRouter } from "next/navigation";
 
 export default function Inventory() {
 	const [items, setItems] = useState<Item[]>([]);
 	const [loading, setLoading] = useState(true);
 	const [view, setView] = useState("Card");
-	const { user, loading: authLoading } = useAuth();
-	const router = useRouter();
-
-	// Redirect if not authenticated
-	useEffect(() => {
-		if (!authLoading && !user) {
-			router.push("/login");
-		}
-	}, [user, authLoading, router]);
 
 	const fetchItems = async () => {
 		try {
-			const { data: { session } } = await supabase.auth.getSession();
-			const headers = {
-				'Authorization': `Bearer ${session?.access_token}`
-			};
-
-			const res = await fetch("/api/item", { headers });
+			const res = await fetch("/api/item");
 			if (!res.ok) {
 				const errorBody = await res.json();
 				throw new Error(errorBody.error || "Request failed");
@@ -48,12 +31,7 @@ export default function Inventory() {
 
 	const fetchCategories = async () => {
 		try {
-			const { data: { session } } = await supabase.auth.getSession();
-			const headers = {
-				'Authorization': `Bearer ${session?.access_token}`
-			};
-
-			const res = await fetch("/api/category", { headers });
+			const res = await fetch("/api/category");
 			if (!res.ok) {
 				const errorBody = await res.json();
 				throw new Error(errorBody.error || "Request failed");
@@ -66,15 +44,8 @@ export default function Inventory() {
 	};
 
 	useEffect(() => {
-		if (user) {
-			fetchItems();
-		}
-	}, [user]);
-
-	// Show loading while checking authentication
-	if (authLoading || !user) {
-		return <div className="min-h-screen flex items-center justify-center">Loading...</div>;
-	}
+		fetchItems();
+	}, []);
 
 	return (
 		<div className="flex min-h-screen w-full flex-col bg-muted/40">

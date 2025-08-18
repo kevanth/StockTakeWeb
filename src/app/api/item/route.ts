@@ -3,31 +3,34 @@ import { addItem, getItems } from "@/lib/items";
 import { NextResponse } from "next/server";
 
 export async function GET(req: Request) {
+	const username = req.headers.get("x-username")
+	
+	if (!username) {
+		return NextResponse.json({ error: "Username is required" }, { status: 400 });
+	}
+
 	try {
-		const { searchParams } = new URL(req.url);
-		const boxId = searchParams.get('boxId');
-		
-		const items: Item[] = await getItems(boxId || undefined);
+		const items:Item[] = await getItems(username);
 		return NextResponse.json({ items }, { status: 200 });
-	} catch (error) {
+	} catch (error: unknown) {
 		const message = error instanceof Error ? error.message : "Unexpected error";
 		return NextResponse.json({ error: "Failed to fetch items: " + message }, { status: 500 });
 	}
 }
 
 export async function POST(req: Request) {
+	const username = req.headers.get("x-username")
+	if (!username) {
+		return NextResponse.json({ error: "Username is required" }, { status: 400 });
+	}
 	try {
-		const { name, count, boxId } = await req.json();
+		const {  name, count } = await req.json();
 
-		if (!name || !boxId) {
-			return NextResponse.json({ error: "Name and boxId are required" }, { status: 400 });
-		}
-
-		const item = new Item("", name, count || 0, "", "");
-		await addItem(item, boxId);
+		const item = new Item(0, name, count, "", "");
+		await addItem(username, item);
 
 		return NextResponse.json({ success: true }, { status: 200 });
-	} catch (error) {
+	} catch (error: unknown) {
 		const message = error instanceof Error ? error.message : "Unexpected error";
 		return NextResponse.json({ error: "Failed to add items: " + message }, { status: 500 });
 	}
