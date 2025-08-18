@@ -1,5 +1,5 @@
 import Item from "@/class/Item";
-import { supabase } from "./db";
+import { createSupabaseServerClient, supabase } from "./db";
 
 export async function getItems(username: string): Promise<Item[]> {
 	const { data, error } = await supabase
@@ -15,20 +15,32 @@ export async function getItems(username: string): Promise<Item[]> {
 	return data?.map(row => new Item(row.id, row.name, row.quantity, row.category, row.description)) || [];
 }
 
-export async function getCategories(username: string): Promise<string[]> {
-		const { data, error } = await supabase
-		.from("items")
-		.select("category")
-		.eq("owner", username)
+export async function getBoxes() {
+	const supabase = await createSupabaseServerClient();
+
+	const {
+		data: { session },
+		error: sessionError,
+	} = await supabase.auth.getSession()
+
+	if (sessionError || !session?.user) {
+		throw new Error('Unauthorized')
+	}
+
+	const userId = session.user.id
+
+	const { data, error } = await supabase
+		.from("box_members")
+		.select("box_id")
+		.eq("user_id", userId)
 
 	if (error) {
-		console.error("Fetch failed:", error.message, error.details);
-		throw new Error("Fetch failed: " + error.message);
+		console.error("Failed to fetch boxes", error)
+		throw new Error("Could not load boxes")
 	}
-	
-	const uniqueCategories = [...new Set((data ?? []).filter(row => row.category != null).map(row => row.category))];
 
-	return uniqueCategories;
+	const boxes = data.map((b) => b.box_id)
+	return boxes
 }
 
 export async function addItem(username: string, item: Item): Promise<void> {
