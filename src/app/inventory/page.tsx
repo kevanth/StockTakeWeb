@@ -6,6 +6,16 @@ import AddItemButtonOrForm from "@/components/AddItemButtonOrForm";
 import Item from "@/class/Item";
 import { Toaster, toast } from "sonner";
 import { List, SquareStack } from "lucide-react";
+import {
+  Sidebar,
+  SidebarContent,
+  SidebarFooter,
+  SidebarGroup,
+  SidebarHeader,
+  SidebarProvider,
+  SidebarTrigger,
+} from "@/components/ui/sidebar"
+import { AppSidebar } from "@/components/Sidebar";
 
 export default function Inventory() {
 	const [items, setItems] = useState<Item[]>([]);
@@ -46,13 +56,20 @@ export default function Inventory() {
 		fetchBoxes();
 	}, []);
 
-	return (
+	return (    
+	<SidebarProvider>
+      <AppSidebar />
+      <main>
+        <SidebarTrigger />
 		<div>
 			{boxes.map((box)=>
 			(
 				<div key={box}> {box} </div>
 			))}
 		</div>
+      </main>
+    </SidebarProvider>
+
 	)
 	// return (
 	// 	<div className="flex min-h-screen w-full flex-col bg-muted/40">
