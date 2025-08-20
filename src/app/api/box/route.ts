@@ -5,14 +5,14 @@ export async function GET() {
 	try {  
 		const supabase = await createClient()
 		const { data, error } = await supabase
-		.from("box_members")
-		.select("box_id")
+		.from("boxes")
+		.select("name")
 	if (error) {
 		console.error("Failed to fetch boxes", error)
 		throw new Error("Could not load boxes")
 	}
 
-	const boxes =  data.map((b) => b.box_id)
+	const boxes =  data.map((b) => b.name)
 	return NextResponse.json({ boxes }, { status: 200 })
 	} catch (error) {
 		const message = error instanceof Error ? error.message : "Unknown error"

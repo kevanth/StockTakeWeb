@@ -6,11 +6,10 @@ import AddItemButtonOrForm from "@/components/AddItemButtonOrForm";
 import Item from "@/class/Item";
 import { Toaster, toast } from "sonner";
 import { List, SquareStack } from "lucide-react";
-import { supabase } from "@/lib/db";
 
 export default function Inventory() {
 	const [items, setItems] = useState<Item[]>([]);
-	const [box, setBoxes] = useState<string>();
+	const [boxes, setBoxes] = useState<string[]>([]);
 	const [loading, setLoading] = useState(true);
 	const [view, setView] = useState("Card");
 
@@ -49,10 +48,12 @@ export default function Inventory() {
 
 	return (
 		<div>
-			test
+			{boxes.map((box)=>
+			(
+				<div key={box}> {box} </div>
+			))}
 		</div>
 	)
-
 	// return (
 	// 	<div className="flex min-h-screen w-full flex-col bg-muted/40">
 			
