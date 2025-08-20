@@ -26,9 +26,7 @@ export default function Login() {
     
         setLoading(false)
         if (res.ok) {
-            // router.push("/inventory")
-            toast("Success")
-            console.log("test")
+            router.push("/inventory")
         } else {
             const data = await res.json()
             setError(data.error || "Something went wrong")

@@ -13,16 +13,6 @@ export async function loginUser(email: string, password: string): Promise<{
 			})
 
 	if (error || !data.user) throw new Error("Invalid email or password") 
-
-	// console.log("Generating token")
-	// //generate token 
-	// const token =  await generateToken({
-	// 	sub: user.username,
-	// 	email: user.email
-	// });
-	
-	// console.log("Generated token")
-	console.log(data)
 	return { user: data.user, accessToken: data.session.access_token }
 }
 
