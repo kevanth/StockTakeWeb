@@ -1,12 +1,12 @@
-import { supabase } from "@/lib/db"
 import bcrypt from "bcryptjs"
-import { generateToken } from "./jwt"
-import { User, Session } from "@supabase/supabase-js";
+import { User } from "@supabase/supabase-js";
+import { createClient } from "./supabase/server";
 
 export async function loginUser(email: string, password: string): Promise<{
 	user: User;
 	accessToken: string;
-}> { 
+}> {
+	 const supabase = await createClient()
 	const { data , error } = await supabase.auth.signInWithPassword({
 			email: email,
 			password: password
@@ -22,7 +22,7 @@ export async function loginUser(email: string, password: string): Promise<{
 	// });
 	
 	// console.log("Generated token")
-
+	console.log(data)
 	return { user: data.user, accessToken: data.session.access_token }
 }
 

@@ -3,6 +3,7 @@
 import { useRouter } from "next/navigation" 
 
 import { useState } from "react"
+import { toast, Toaster } from "sonner";
 
 export default function Login() {
 	const [email, setEmail] = useState('')
@@ -24,9 +25,10 @@ export default function Login() {
         })
     
         setLoading(false)
-    
         if (res.ok) {
-            router.push("/inventory")
+            // router.push("/inventory")
+            toast("Success")
+            console.log("test")
         } else {
             const data = await res.json()
             setError(data.error || "Something went wrong")
@@ -37,6 +39,7 @@ export default function Login() {
 
     return(
         <div className="flex justify-center items-center min-h-screen">
+           <Toaster></Toaster>
             <div className="flex flex-col bg-card rounded-2xl w-1/3 border-accent border-2 p-10 gap-6">
                 <div>
                     <p className="text-xl">

@@ -1,10 +1,19 @@
+import { createClient } from "@/lib/supabase/server";
 import { NextResponse } from "next/server";
-import { getBoxes } from "@/lib/items";
 
 export async function GET() {
-	try {
-		const boxes = await getBoxes()
-		return NextResponse.json({ boxes }, { status: 200 })
+	try {  
+		const supabase = await createClient()
+		const { data, error } = await supabase
+		.from("box_members")
+		.select("box_id")
+	if (error) {
+		console.error("Failed to fetch boxes", error)
+		throw new Error("Could not load boxes")
+	}
+
+	const boxes =  data.map((b) => b.box_id)
+	return NextResponse.json({ boxes }, { status: 200 })
 	} catch (error) {
 		const message = error instanceof Error ? error.message : "Unknown error"
 		return NextResponse.json({ error: message }, { status: 401 })

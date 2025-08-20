@@ -3,6 +3,7 @@ import { NextResponse } from 'next/server'
 
 export async function POST(req: Request) {
 	try {
+		console.log("log")
 		const { email, password } = await req.json()
 		await loginUser(email, password)
 		const res = NextResponse.json({ success: true})
