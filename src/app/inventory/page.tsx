@@ -16,10 +16,11 @@ import {
   SidebarTrigger,
 } from "@/components/ui/sidebar"
 import { AppSidebar } from "@/components/Sidebar";
+import Box from "@/class/box";
 
 export default function Inventory() {
 	const [items, setItems] = useState<Item[]>([]);
-	const [boxes, setBoxes] = useState<string[]>([]);
+	const [boxes, setBoxes] = useState<Box[]>([]);
 	const [loading, setLoading] = useState(true);
 	const [view, setView] = useState("Card");
 
@@ -64,7 +65,7 @@ export default function Inventory() {
 		<div>
 			{boxes.map((box)=>
 			(
-				<div key={box}> {box} </div>
+				<div key={box.id}> {box.owner} </div>
 			))}
 		</div>
       </main>

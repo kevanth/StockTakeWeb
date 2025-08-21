@@ -1,3 +1,6 @@
+# StockTake
+Website that allows users to share their inventory with their friends.
+
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
 ## Getting Started
