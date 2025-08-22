@@ -59,13 +59,13 @@ export default function Inventory() {
 
 	return (    
 	<SidebarProvider>
-      <AppSidebar />
+      <AppSidebar boxes={boxes} />
       <main>
         <SidebarTrigger />
 		<div>
 			{boxes.map((box)=>
 			(
-				<div key={box.id}> {box.owner} </div>
+				<div key={box.id}> {box.name} </div>
 			))}
 		</div>
       </main>
