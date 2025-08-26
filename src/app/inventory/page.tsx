@@ -21,6 +21,7 @@ import Box from "@/class/box";
 export default function Inventory() {
 	const [items, setItems] = useState<Item[]>([]);
 	const [boxes, setBoxes] = useState<Box[]>([]);
+	const [activeBox, setActiveBox] = useState<Box>()
 	const [loading, setLoading] = useState(true);
 	const [view, setView] = useState("Card");
 
@@ -50,12 +51,18 @@ export default function Inventory() {
 		})
 		const data = await res.json()
 		setBoxes(data.boxes)
+		changeActiveBox(data.boxes(0))
 	};
 
 	useEffect(() => {
 		// fetchItems();
 		fetchBoxes();
 	}, []);
+
+
+  	const changeActiveBox = (box: Box) => {
+		setActiveBox(box)
+	}
 
 	return (    
 	<SidebarProvider>

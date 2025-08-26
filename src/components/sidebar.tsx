@@ -14,6 +14,7 @@ import {
 
 interface AppSidebarProps {
   boxes: Box[]
+  
 }
 
 export function AppSidebar({boxes}:AppSidebarProps) {
@@ -28,7 +29,7 @@ export function AppSidebar({boxes}:AppSidebarProps) {
               {boxes.map((box) => (
                 <SidebarMenuItem key={box.id}>
                   <SidebarMenuButton asChild>
-                    <span className="truncate">{box.name}</span>
+                    <button className="truncate">{box.name}</button>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
               ))}
