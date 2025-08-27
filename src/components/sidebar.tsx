@@ -1,4 +1,4 @@
-import Box from "@/class/box"
+import Box from "@/class/box";
 import {
   Sidebar,
   SidebarContent,
@@ -10,14 +10,19 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
-} from "@/components/ui/sidebar"
+} from "@/components/ui/sidebar";
 
 interface AppSidebarProps {
-  boxes: Box[]
-  
+  boxes: Box[];
+  activeBox: Box | undefined;
+  setActiveBox: (box: Box) => void;
 }
 
-export function AppSidebar({boxes}:AppSidebarProps) {
+export function AppSidebar({
+  boxes,
+  activeBox,
+  setActiveBox,
+}: AppSidebarProps) {
   return (
     <Sidebar>
       <SidebarHeader />
@@ -28,8 +33,15 @@ export function AppSidebar({boxes}:AppSidebarProps) {
             <SidebarMenu>
               {boxes.map((box) => (
                 <SidebarMenuItem key={box.id}>
-                  <SidebarMenuButton asChild>
-                    <button className="truncate">{box.name}</button>
+                  <SidebarMenuButton
+                    className={`truncate ${
+                      activeBox && activeBox.id === box.id
+                        ? "bg-blue-500 text-white"
+                        : "bg-white text-black"
+                    }`}
+                    onClick={() => setActiveBox(box)}
+                  >
+                    {box.name}
                   </SidebarMenuButton>
                 </SidebarMenuItem>
               ))}
@@ -40,5 +52,5 @@ export function AppSidebar({boxes}:AppSidebarProps) {
       </SidebarContent>
       <SidebarFooter />
     </Sidebar>
-  )
+  );
 }
