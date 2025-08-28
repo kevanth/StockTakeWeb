@@ -3,21 +3,21 @@ import type { SupabaseClient } from "@supabase/supabase-js"
 import type { Database } from "@/types/supabase"
 
 // Get all items for a given user
-// export async function getItems(supabase: SupabaseClient<Database>, username: string): Promise<Item[]> {
-// 	const { data, error } = await supabase
-// 		.from("items")
-// 		.select("*")
-// 		.eq("owner", username)
+export async function getItems(supabase: SupabaseClient<Database>, boxId: string): Promise<Item[]> {
+	const { data, error } = await supabase
+		.from("items")
+		.select("*")
+		.eq("box_id", boxId)
 
-// 	if (error) {
-// 		console.error("Fetch failed:", error.message, error.details)
-// 		throw new Error("Fetch failed: " + error.message)
-// 	}
+	if (error) {
+		console.error("Fetch failed:", error.message, error.details)
+		throw new Error("Fetch failed: " + error.message)
+	}
 
-// 	return data?.map(
-// 		(row) => new Item(row.id, row.name, row.quantity, row.category, row.description)
-// 	) || []
-// }
+	return data?.map(
+		(row) => new Item(row.id, row.name)
+	) || []
+}
 
 // Get all boxes for the currently logged in user
 export async function getBoxes(supabase: SupabaseClient<Database>): Promise<string[]> {

@@ -1,17 +1,23 @@
 import Item from "@/class/Item";
-import { addItem, getItems } from "@/lib/items";
+import { createClient } from "@/lib/supabase/server";
 import { NextResponse } from "next/server";
 
 export async function GET(req: Request) {
-	const username = req.headers.get("x-username")
-	
-	if (!username) {
-		return NextResponse.json({ error: "Username is required" }, { status: 400 });
-	}
-
 	try {
-		const items:Item[] = await getItems(username);
-		return NextResponse.json({ items }, { status: 200 });
+		const { searchParams } = new URL(req.url)
+		const boxId = searchParams.get("boxId")
+		console.log("boxId: "+ boxId)
+		const supabase = await createClient()
+		const { data, error } = await supabase
+		.from("items")
+		.select("name, id")
+		.eq("box_id", boxId)
+		
+		const items =  data?.map(
+			(row) => new Item(row.id, row.name)
+		) || []
+
+		return NextResponse.json({ items }, { status: 200 })
 	} catch (error: unknown) {
 		const message = error instanceof Error ? error.message : "Unexpected error";
 		return NextResponse.json({ error: "Failed to fetch items: " + message }, { status: 500 });

@@ -27,11 +27,14 @@ export default function Inventory() {
 
   const fetchItems = async () => {
     try {
-      const res = await fetch("/api/item");
-      if (!res.ok) {
-        const errorBody = await res.json();
-        throw new Error(errorBody.error || "Request failed");
-      }
+      const boxId = activeBox?.id;
+      console.log(activeBox);
+      const res = await fetch(`/api/item?boxId=${boxId}`, {
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+      });
       const data = await res.json();
       setItems(data.items);
     } catch (error) {
@@ -50,21 +53,17 @@ export default function Inventory() {
     });
     const data = await res.json();
     setBoxes(data.boxes);
-    changeActiveBox(data.boxes[0]);
+    setActiveBox(data.boxes[0]);
   };
 
   useEffect(() => {
-    // fetchItems();
     fetchBoxes();
   }, []);
 
   useEffect(() => {
     console.log(activeBox);
-  }, [activeBox]);
-
-  const changeActiveBox = (box: Box) => {
-    setActiveBox(box);
-  };
+    fetchItems();
+  }, [activeBox, fetchItems]);
 
   return (
     <SidebarProvider>
@@ -76,8 +75,8 @@ export default function Inventory() {
       <main>
         <SidebarTrigger />
         <div>
-          {boxes.map((box) => (
-            <div key={box.id}> {box.name} </div>
+          {items.map((item) => (
+            <div key={item.id}> {item.name} </div>
           ))}
         </div>
       </main>
