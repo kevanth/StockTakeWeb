@@ -1,7 +1,7 @@
 "use client";
 
 import useSWR from "swr";
-import { Item } from "@/class/Item";
+import Item from "@/class/Item";
 import { fetcher } from "@/lib/utils";
 
 export function useItems(boxId: string | null) {

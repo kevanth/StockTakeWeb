@@ -4,6 +4,8 @@ import useSWR from "swr";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { fetcher } from "@/lib/utils";
 
+export type Box = { id: string; name: string; owner_id?: string };
+
 export function useBoxes() {
   const { data, error, isLoading, mutate } = useSWR<{ boxes: Box[] }>(
     "/api/box",
@@ -39,11 +41,9 @@ export function useBoxes() {
       // Update cache optimistically
       mutate(optimisticData, false);
       
-      const res = await fetch("/api/box", {
+      const res = await fetch(`/api/box?box_name=${encodeURIComponent(payload.name)}`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
         credentials: "include",
-        body: JSON.stringify(payload),
       });
       
       if (!res.ok) throw new Error("Failed to add box");
@@ -69,11 +69,9 @@ export function useBoxes() {
       
       mutate(optimisticData, false);
       
-      const res = await fetch(`/api/box/${id}`, {
+      const res = await fetch(`/api/box/${id}?box_name=${encodeURIComponent(payload.name)}`, {
         method: "PUT",
-        headers: { "Content-Type": "application/json" },
         credentials: "include",
-        body: JSON.stringify(payload),
       });
       
       if (!res.ok) throw new Error("Failed to update box");

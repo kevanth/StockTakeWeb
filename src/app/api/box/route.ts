@@ -24,22 +24,29 @@ export async function GET() {
 export async function POST(req: Request) {
   try {
     const { searchParams } = new URL(req.url);
-    const owner_id = searchParams.get("owner_id");
     const box_name = searchParams.get("box_name");
+    
+    if (!box_name) {
+      return NextResponse.json({ error: "Box name is required" }, { status: 400 });
+    }
+    
     const supabase = await createClient();
     const { data, error } = await supabase.from("boxes").insert({
-      owner_id: { owner_id },
-      name: { box_name },
-    });
+      name: box_name,
+    }).select();
     if (error) {
-      console.error("Failed to fetch boxes", error);
-      throw new Error("Could not load boxes");
+      console.error("Failed to create box", error);
+      throw new Error("Could not create box");
     }
 
-    const boxes = data.map((b : Box) => new Box(b.id, b.name, b.owner_id));
+    if (!data || data.length === 0) {
+      throw new Error("No data returned from box creation");
+    }
+
+    const boxes = data.map((b : any) => new Box(b.id, b.name, b.owner_id));
     return NextResponse.json({ boxes }, { status: 200 });
   } catch (error) {
     const message = error instanceof Error ? error.message : "Unknown error";
-    return NextResponse.json({ error: message }, { status: 401 });
+    return NextResponse.json({ error: message }, { status: 500 });
   }
 }
