@@ -84,7 +84,7 @@ export default function Inventory() {
 
         {boxId && !itemsLoading && (
           <div>
-            {items.map((item) => (
+            {items.map((item: Item) => (
               <div key={item.id}>{item.name}</div>
             ))}
 
@@ -100,3 +100,4 @@ export default function Inventory() {
     </SidebarProvider>
   );
 }
+// {/* Content layout next to sidebar */} // <div className="flex flex-col sm:gap-4 sm:py-4 sm:pl-14"> // {/* Toggle View Button */} // <div className="flex justify-end px-4 sm:px-6"> // <button // onClick={() => setView(view === "Card" ? "List" : "Card")} // className="text-foreground" // > // {view === "Card" ? <List className="h-6 w-6" /> : <SquareStack className="h-6 w-6" />} // </button> // </div> // {/* Content */} // <main className="flex-1 p-4 sm:px-6 sm:py-0"> // {loading && <div className="text-center mt-10">Loading...</div>} // {/* Card View */} // <div // className={${ // view !== "Card" || loading ? "hidden" : "" // } grid grid-cols-[repeat(auto-fit,minmax(240px,1fr))] gap-6} // > // {items.map((item) => ( // <ItemTile // key={item.id} // item={item} // refreshItems={fetchItems} // toast={toast.error} // getCategories={fetchCategories} // /> // ))} // <AddItemButtonOrForm refreshItems={fetchItems} /> // </div> // {/* List View */} // <div // className={${ // view !== "List" || loading ? "hidden" : "" // } w-full mt-10} // > // List View Placeholder // </div> // </main> // </div> // <Toaster /> // </div> // ); }

@@ -1,11 +1,11 @@
 export default class Box {
   id: string;
   name: string;
-  owner: string;
+  owner_id: string;
 
-  constructor(id: string, name: string, owner: string) {
+  constructor(id: string, name: string, owner_id: string) {
     this.id = id;
     this.name = name;
-    this.owner = owner;
+    this.owner_id = owner_id;
   }
 }
