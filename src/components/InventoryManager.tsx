@@ -88,7 +88,7 @@ export function InventoryManager() {
                 placeholder="Enter item name"
                 value={newItemName}
                 onChange={(e) => setNewItemName(e.target.value)}
-                onKeyPress={(e) => e.key === "Enter" && handleAddItem()}
+                onKeyDown={(e) => e.key === "Enter" && handleAddItem()}
               />
               <Button onClick={handleAddItem} disabled={!newItemName.trim()}>
                 Add Item

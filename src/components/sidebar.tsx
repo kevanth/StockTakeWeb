@@ -55,7 +55,7 @@ export function AppSidebar() {
                     className={`truncate ${
                       activeBox && activeBox.id === box.id
                         ? "bg-accent text-white"
-                        : " text-black text-white border-2 border-accent"
+                        : "  text-white"
                     }`}
                     onClick={() => handleBoxSelect(box)}
                   >
@@ -72,7 +72,7 @@ export function AppSidebar() {
                         placeholder="Enter box name"
                         value={newBoxName}
                         onChange={(e) => setNewBoxName(e.target.value)}
-                        onKeyPress={(e) => {
+                        onKeyDown={(e) => {
                           if (e.key === "Enter") {
                             handleAddBox();
                           } else if (e.key === "Escape") {
