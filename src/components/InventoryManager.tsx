@@ -9,61 +9,12 @@ import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
 
 export function InventoryManager() {
-  const [newBoxName, setNewBoxName] = useState("");
   const [newItemName, setNewItemName] = useState("");
-  const [editingBoxId, setEditingBoxId] = useState<string | null>(null);
-  const [editingBoxName, setEditingBoxName] = useState("");
 
-  const {
-    boxes,
-    boxesLoading,
-    boxesError,
-    activeBox,
-    selectBox,
-    addBox,
-    updateBox,
-    deleteBox,
-  } = useBoxes();
+  const { activeBox, boxesLoading, boxesError } = useBoxes();
 
   const { items, itemsLoading, itemsError, addItem, updateItem, deleteItem } =
     useItems(activeBox?.id ?? null);
-
-  // Handle box operations
-  const handleAddBox = async () => {
-    if (!newBoxName.trim()) return;
-
-    try {
-      await addBox({ name: newBoxName.trim() });
-      setNewBoxName("");
-      toast.success("Box added successfully!");
-    } catch (error) {
-      toast.error("Failed to add box");
-    }
-  };
-
-  const handleUpdateBox = async (id: string) => {
-    if (!editingBoxName.trim()) return;
-
-    try {
-      await updateBox(id, { name: editingBoxName.trim() });
-      setEditingBoxId(null);
-      setEditingBoxName("");
-      toast.success("Box updated successfully!");
-    } catch (error) {
-      toast.error("Failed to update box");
-    }
-  };
-
-  const handleDeleteBox = async (id: string) => {
-    if (!confirm("Are you sure you want to delete this box?")) return;
-
-    try {
-      await deleteBox(id);
-      toast.success("Box deleted successfully!");
-    } catch (error) {
-      toast.error("Failed to delete box");
-    }
-  };
 
   // Handle item operations
   const handleAddItem = async () => {
@@ -102,154 +53,83 @@ export function InventoryManager() {
 
   return (
     <div className="p-6 space-y-6">
-      {/* Box Management Section */}
+      {/* Box Information */}
       <div className="space-y-4">
-        <h2 className="text-2xl font-bold">Box Management</h2>
+        <h2 className="text-2xl font-bold">Inventory Management</h2>
 
-        {/* Add New Box */}
-        <div className="flex gap-2">
-          <Input
-            placeholder="Enter box name"
-            value={newBoxName}
-            onChange={(e) => setNewBoxName(e.target.value)}
-            onKeyPress={(e) => e.key === "Enter" && handleAddBox()}
-          />
-          <Button onClick={handleAddBox} disabled={!newBoxName.trim()}>
-            Add Box
-          </Button>
-        </div>
+        {!activeBox && !boxesLoading && (
+          <div className="text-center text-gray-500 p-8">
+            <p className="text-lg">
+              Please select a box from the sidebar to manage its items.
+            </p>
+          </div>
+        )}
 
-        {/* Boxes List */}
-        {boxesLoading ? (
-          <div>Loading boxes...</div>
-        ) : (
-          <div className="space-y-2">
-            {boxes.map((box) => (
-              <div
-                key={box.id}
-                className="flex items-center gap-2 p-3 border rounded-lg"
-              >
-                {editingBoxId === box.id ? (
-                  <>
-                    <Input
-                      value={editingBoxName}
-                      onChange={(e) => setEditingBoxName(e.target.value)}
-                      onKeyPress={(e) =>
-                        e.key === "Enter" && handleUpdateBox(box.id)
-                      }
-                    />
-                    <Button
-                      size="sm"
-                      onClick={() => handleUpdateBox(box.id)}
-                      disabled={!editingBoxName.trim()}
-                    >
-                      Save
-                    </Button>
-                    <Button
-                      size="sm"
-                      variant="outline"
-                      onClick={() => {
-                        setEditingBoxId(null);
-                        setEditingBoxName("");
-                      }}
-                    >
-                      Cancel
-                    </Button>
-                  </>
-                ) : (
-                  <>
-                    <button
-                      className={`flex-1 text-left ${
-                        activeBox?.id === box.id
-                          ? "font-bold text-blue-600"
-                          : ""
-                      }`}
-                      onClick={() => selectBox(box.id)}
-                    >
-                      {box.name}
-                    </button>
-                    <Button
-                      size="sm"
-                      variant="outline"
-                      onClick={() => {
-                        setEditingBoxId(box.id);
-                        setEditingBoxName(box.name);
-                      }}
-                    >
-                      Edit
-                    </Button>
-                    <Button
-                      size="sm"
-                      variant="destructive"
-                      onClick={() => handleDeleteBox(box.id)}
-                    >
-                      Delete
-                    </Button>
-                  </>
-                )}
-              </div>
-            ))}
+        {activeBox && (
+          <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+            <h3 className="text-lg font-semibold text-blue-800">
+              Currently managing: {activeBox.name}
+            </h3>
           </div>
         )}
       </div>
 
-      <Separator />
-
       {/* Item Management Section */}
       {activeBox && (
-        <div className="space-y-4">
-          <h2 className="text-2xl font-bold">Items in: {activeBox.name}</h2>
+        <>
+          <Separator />
 
-          {/* Add New Item */}
-          <div className="flex gap-2">
-            <Input
-              placeholder="Enter item name"
-              value={newItemName}
-              onChange={(e) => setNewItemName(e.target.value)}
-              onKeyPress={(e) => e.key === "Enter" && handleAddItem()}
-            />
-            <Button onClick={handleAddItem} disabled={!newItemName.trim()}>
-              Add Item
-            </Button>
-          </div>
+          <div className="space-y-4">
+            <h3 className="text-xl font-semibold">Items in {activeBox.name}</h3>
 
-          {/* Items List */}
-          {itemsLoading ? (
-            <div>Loading items...</div>
-          ) : itemsError ? (
-            <div className="text-red-500">
-              Error loading items: {itemsError.message}
+            {/* Add New Item */}
+            <div className="flex gap-2">
+              <Input
+                placeholder="Enter item name"
+                value={newItemName}
+                onChange={(e) => setNewItemName(e.target.value)}
+                onKeyPress={(e) => e.key === "Enter" && handleAddItem()}
+              />
+              <Button onClick={handleAddItem} disabled={!newItemName.trim()}>
+                Add Item
+              </Button>
             </div>
-          ) : (
-            <div className="space-y-2">
-              {items.length === 0 ? (
-                <div className="text-gray-500">No items in this box yet.</div>
-              ) : (
-                items.map((item) => (
-                  <div
-                    key={item.id}
-                    className="flex items-center gap-2 p-3 border rounded-lg"
-                  >
-                    <span className="flex-1">{item.name}</span>
-                    <Button
-                      size="sm"
-                      variant="destructive"
-                      onClick={() => handleDeleteItem(item.id)}
-                    >
-                      Delete
-                    </Button>
+
+            {/* Items List */}
+            {itemsLoading ? (
+              <div>Loading items...</div>
+            ) : itemsError ? (
+              <div className="text-red-500">
+                Error loading items: {itemsError.message}
+              </div>
+            ) : (
+              <div className="space-y-2">
+                {items.length === 0 ? (
+                  <div className="text-gray-500 text-center p-8">
+                    <p>No items in this box yet.</p>
+                    <p className="text-sm mt-2">Add your first item above!</p>
                   </div>
-                ))
-              )}
-            </div>
-          )}
-        </div>
-      )}
-
-      {!activeBox && !boxesLoading && boxes.length > 0 && (
-        <div className="text-center text-gray-500">
-          Select a box to view and manage its items.
-        </div>
+                ) : (
+                  items.map((item) => (
+                    <div
+                      key={item.id}
+                      className="flex items-center gap-2 p-3 border rounded-lg"
+                    >
+                      <span className="flex-1">{item.name}</span>
+                      <Button
+                        size="sm"
+                        variant="destructive"
+                        onClick={() => handleDeleteItem(item.id)}
+                      >
+                        Delete
+                      </Button>
+                    </div>
+                  ))
+                )}
+              </div>
+            )}
+          </div>
+        </>
       )}
 
       <Toaster />

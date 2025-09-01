@@ -1,4 +1,3 @@
-import Box from "@/class/box";
 import {
   Sidebar,
   SidebarContent,
@@ -11,24 +10,43 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
+import { useState } from "react";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { useBoxes, Box } from "@/lib/hooks/useBoxes";
 
-interface AppSidebarProps {
-  boxes: Box[];
-  activeBox: Box | undefined;
-  setActiveBox: (box: Box) => void;
-}
+export function AppSidebar() {
+  const [isAddingBox, setIsAddingBox] = useState(false);
+  const [newBoxName, setNewBoxName] = useState("");
+  const { boxes, activeBox, addBox, selectBox } = useBoxes();
 
-export function AppSidebar({
-  boxes,
-  activeBox,
-  setActiveBox,
-}: AppSidebarProps) {
+  const handleAddBox = async () => {
+    if (!newBoxName.trim()) return;
+
+    try {
+      await addBox({ name: newBoxName.trim() });
+      setNewBoxName("");
+      setIsAddingBox(false);
+    } catch (error) {
+      console.error("Failed to add box:", error);
+    }
+  };
+
+  const handleCancel = () => {
+    setNewBoxName("");
+    setIsAddingBox(false);
+  };
+
+  const handleBoxSelect = (box: Box) => {
+    selectBox(box.id);
+  };
+
   return (
     <Sidebar>
       <SidebarHeader />
       <SidebarContent>
         <SidebarGroup>
-          <SidebarGroupLabel>Application</SidebarGroupLabel>
+          <SidebarGroupLabel>Box Management</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
               {boxes.map((box) => (
@@ -36,15 +54,63 @@ export function AppSidebar({
                   <SidebarMenuButton
                     className={`truncate ${
                       activeBox && activeBox.id === box.id
-                        ? "bg-blue-500 text-white"
-                        : "bg-white text-black"
+                        ? "bg-accent text-white"
+                        : " text-black text-white border-2 border-accent"
                     }`}
-                    onClick={() => setActiveBox(box)}
+                    onClick={() => handleBoxSelect(box)}
                   >
                     {box.name}
                   </SidebarMenuButton>
                 </SidebarMenuItem>
               ))}
+              <SidebarMenuItem className="flex justify-center">
+                {isAddingBox ? (
+                  <div className="w-full p-2">
+                    <div className="flex flex-col gap-2">
+                      <Input
+                        type="text"
+                        placeholder="Enter box name"
+                        value={newBoxName}
+                        onChange={(e) => setNewBoxName(e.target.value)}
+                        onKeyPress={(e) => {
+                          if (e.key === "Enter") {
+                            handleAddBox();
+                          } else if (e.key === "Escape") {
+                            handleCancel();
+                          }
+                        }}
+                        className="text-sm"
+                        autoFocus
+                      />
+                      <div className="flex gap-1">
+                        <Button
+                          size="sm"
+                          onClick={handleAddBox}
+                          disabled={!newBoxName.trim()}
+                          className="flex-1 text-xs"
+                        >
+                          Add
+                        </Button>
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          onClick={handleCancel}
+                          className="flex-1 text-xs"
+                        >
+                          Cancel
+                        </Button>
+                      </div>
+                    </div>
+                  </div>
+                ) : (
+                  <SidebarMenuButton
+                    className="text-white border-2 border-accent text-center w-8 h-8 rounded-full flex items-center justify-center"
+                    onClick={() => setIsAddingBox(true)}
+                  >
+                    +
+                  </SidebarMenuButton>
+                )}
+              </SidebarMenuItem>
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
