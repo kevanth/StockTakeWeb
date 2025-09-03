@@ -7,6 +7,7 @@ import { useItems } from "@/lib/hooks/useItems";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
+import { Item } from "@/types/models";
 
 export function InventoryManager() {
   const [newItemName, setNewItemName] = useState("");
@@ -96,12 +97,13 @@ export function InventoryManager() {
                 <p className="text-sm mt-2">Add your first item above!</p>
               </div>
             ) : (
-              items.map((item) => (
+              items.map((item: Item) => (
                 <div
                   key={item.id}
                   className="flex items-center gap-2 p-3 border rounded-lg"
                 >
                   <span className="flex-1">{item.name}</span>
+                  <span className="flex-1">{item.quantity_value}</span>
                   <Button
                     size="sm"
                     variant="destructive"

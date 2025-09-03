@@ -1,8 +1,8 @@
 "use client";
 
 import useSWR from "swr";
-import Item from "@/class/Item";
 import { fetcher } from "@/lib/utils";
+import { Item } from "@/types/models";
 
 export function useItems(boxId: string | null) {
   const {
@@ -10,7 +10,7 @@ export function useItems(boxId: string | null) {
     error,
     isLoading,
     mutate,
-  } = useSWR<{ items: Item[] }>(
+  } = useSWR(
     boxId ? `/api/item?boxId=${boxId}` : null, // null pauses the fetch
     fetcher,
     {

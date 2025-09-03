@@ -1,6 +1,7 @@
-import Item from "@/class/Item"
 import type { SupabaseClient } from "@supabase/supabase-js"
 import type { Database } from "@/types/supabase"
+import { Item } from "@/types/models"
+
 
 // Get all items for a given user
 export async function getItems(supabase: SupabaseClient<Database>, boxId: string): Promise<Item[]> {
@@ -14,9 +15,7 @@ export async function getItems(supabase: SupabaseClient<Database>, boxId: string
 		throw new Error("Fetch failed: " + error.message)
 	}
 
-	return data?.map(
-		(row) => new Item(row.id, row.name)
-	) || []
+	return data ?? [];
 }
 
 // Get all boxes for the currently logged in user
