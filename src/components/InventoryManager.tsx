@@ -102,8 +102,12 @@ export function InventoryManager() {
                   key={item.id}
                   className="flex items-center gap-2 p-3 border rounded-lg"
                 >
-                  <span className="flex-1">{item.name}</span>
-                  <span className="flex-1">{item.quantity_value}</span>
+                  <div className="flex flex-col flex-1">
+                    <span className="">{item.name}</span>
+                    <div className="text-gray-400 font-light">
+                      {item.quantity_mode} : {item.quantity_value}
+                    </div>
+                  </div>
                   <Button
                     size="sm"
                     variant="destructive"
