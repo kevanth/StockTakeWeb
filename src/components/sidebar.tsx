@@ -13,7 +13,8 @@ import {
 import { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { useBoxes, Box } from "@/lib/hooks/useBoxes";
+import { useBoxes } from "@/lib/hooks/useBoxes";
+import { Box } from "@/types/models";
 
 export function AppSidebar() {
   const [isAddingBox, setIsAddingBox] = useState(false);

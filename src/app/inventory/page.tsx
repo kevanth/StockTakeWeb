@@ -9,7 +9,6 @@ export default function Inventory() {
     <div className="min-h-screen">
       <SidebarProvider>
         <AppSidebar />
-
         <main>
           <SidebarTrigger />
           <InventoryManager />

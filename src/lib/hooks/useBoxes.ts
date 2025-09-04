@@ -3,8 +3,7 @@
 import useSWR from "swr";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { fetcher } from "@/lib/utils";
-
-export type Box = { id: string; name: string; owner_id?: string };
+import { Box } from "@/types/models";
 
 export function useBoxes() {
   const { data, error, isLoading, mutate } = useSWR<{ boxes: Box[] }>(
@@ -12,6 +11,7 @@ export function useBoxes() {
     fetcher,
     { revalidateOnFocus: false }
   );
+  console.log(data);
   const boxes = data?.boxes ?? [];
 
   // selection is URL-based
@@ -35,19 +35,26 @@ export function useBoxes() {
   async function addBox(payload: { name: string }) {
     try {
       // Optimistic update
-      const optimisticBox = { id: `temp-${Date.now()}`, name: payload.name, owner_id: undefined };
+      const optimisticBox = {
+        id: `temp-${Date.now()}`,
+        name: payload.name,
+        owner_id: undefined,
+      };
       const optimisticData = { boxes: [...boxes, optimisticBox] };
-      
+
       // Update cache optimistically
       mutate(optimisticData, false);
-      
-      const res = await fetch(`/api/box?box_name=${encodeURIComponent(payload.name)}`, {
-        method: "POST",
-        credentials: "include",
-      });
-      
+
+      const res = await fetch(
+        `/api/box?box_name=${encodeURIComponent(payload.name)}`,
+        {
+          method: "POST",
+          credentials: "include",
+        }
+      );
+
       if (!res.ok) throw new Error("Failed to add box");
-      
+
       // Refresh with real data
       await mutate();
     } catch (error) {
@@ -62,20 +69,23 @@ export function useBoxes() {
     try {
       // Optimistic update
       const optimisticData = {
-        boxes: boxes.map(box => 
+        boxes: boxes.map((box) =>
           box.id === id ? { ...box, name: payload.name } : box
-        )
+        ),
       };
-      
+
       mutate(optimisticData, false);
-      
-      const res = await fetch(`/api/box/${id}?box_name=${encodeURIComponent(payload.name)}`, {
-        method: "PUT",
-        credentials: "include",
-      });
-      
+
+      const res = await fetch(
+        `/api/box/${id}?box_name=${encodeURIComponent(payload.name)}`,
+        {
+          method: "PUT",
+          credentials: "include",
+        }
+      );
+
       if (!res.ok) throw new Error("Failed to update box");
-      
+
       await mutate();
     } catch (error) {
       await mutate();
@@ -88,18 +98,18 @@ export function useBoxes() {
     try {
       // Optimistic update
       const optimisticData = {
-        boxes: boxes.filter(box => box.id !== id)
+        boxes: boxes.filter((box) => box.id !== id),
       };
-      
+
       mutate(optimisticData, false);
-      
+
       const res = await fetch(`/api/box/${id}`, {
         method: "DELETE",
         credentials: "include",
       });
-      
+
       if (!res.ok) throw new Error("Failed to delete box");
-      
+
       await mutate();
     } catch (error) {
       await mutate();
