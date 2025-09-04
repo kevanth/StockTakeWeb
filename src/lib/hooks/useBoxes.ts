@@ -35,10 +35,11 @@ export function useBoxes() {
   async function addBox(payload: { name: string }) {
     try {
       // Optimistic update
-      const optimisticBox = {
+      const optimisticBox: Box = {
         id: `temp-${Date.now()}`,
         name: payload.name,
-        owner_id: undefined,
+        owner_id: "",
+        created_at: new Date().toISOString(),
       };
       const optimisticData = { boxes: [...boxes, optimisticBox] };
 
