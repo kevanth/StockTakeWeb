@@ -16,6 +16,7 @@ import { Button } from "@/components/ui/button";
 import { useBoxes } from "@/lib/hooks/useBoxes";
 import { Box } from "@/types/models";
 
+
 export function AppSidebar() {
   const [isAddingBox, setIsAddingBox] = useState(false);
   const [newBoxName, setNewBoxName] = useState("");
@@ -46,6 +47,11 @@ export function AppSidebar() {
     <Sidebar>
       <SidebarHeader />
       <SidebarContent>
+        <SidebarGroup>
+          <SidebarHeader>
+            Name
+          </SidebarHeader>
+        </SidebarGroup>
         <SidebarGroup>
           <SidebarGroupLabel>Box Management</SidebarGroupLabel>
           <SidebarGroupContent>

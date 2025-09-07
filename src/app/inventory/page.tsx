@@ -10,7 +10,7 @@ export default function Inventory() {
       <SidebarProvider>
         <AppSidebar />
         <main>
-          <SidebarTrigger />
+          <SidebarTrigger className="mt-6 ml-6" />
           <InventoryManager />
         </main>
       </SidebarProvider>
