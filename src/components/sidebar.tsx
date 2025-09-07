@@ -10,17 +10,23 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useBoxes } from "@/lib/hooks/useBoxes";
 import { Box } from "@/types/models";
-
+import { getUserClient } from "@/lib/supabase/client";
+import { User } from "@supabase/supabase-js";
 
 export function AppSidebar() {
   const [isAddingBox, setIsAddingBox] = useState(false);
   const [newBoxName, setNewBoxName] = useState("");
   const { boxes, activeBox, addBox, selectBox } = useBoxes();
+  const [user, setUser] = useState<User | null>(null)
+
+  useEffect(() => {
+    getUserClient().then(({ user }) => setUser(user))
+  }, [])
 
   const handleAddBox = async () => {
     if (!newBoxName.trim()) return;
@@ -48,9 +54,7 @@ export function AppSidebar() {
       <SidebarHeader />
       <SidebarContent>
         <SidebarGroup>
-          <SidebarHeader>
-            Name
-          </SidebarHeader>
+          <SidebarHeader>{user?.email}</SidebarHeader>
         </SidebarGroup>
         <SidebarGroup>
           <SidebarGroupLabel>Box Management</SidebarGroupLabel>
