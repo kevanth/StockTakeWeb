@@ -15,18 +15,19 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useBoxes } from "@/lib/hooks/useBoxes";
 import { Box } from "@/types/models";
-import { getUserClient } from "@/lib/supabase/client";
 import { User } from "@supabase/supabase-js";
 
 export function AppSidebar() {
   const [isAddingBox, setIsAddingBox] = useState(false);
   const [newBoxName, setNewBoxName] = useState("");
   const { boxes, activeBox, addBox, selectBox } = useBoxes();
-  const [user, setUser] = useState<User | null>(null)
+  const [user, setUser] = useState<User | null>(null);
 
   useEffect(() => {
-    getUserClient().then(({ user }) => setUser(user))
-  }, [])
+    const { user, error } = await fetch("/api/user", {
+      credentials: "include",
+    });
+  }, []);
 
   const handleAddBox = async () => {
     if (!newBoxName.trim()) return;
