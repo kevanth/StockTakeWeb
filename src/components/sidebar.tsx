@@ -16,18 +16,14 @@ import { Button } from "@/components/ui/button";
 import { useBoxes } from "@/lib/hooks/useBoxes";
 import { Box } from "@/types/models";
 import { User } from "@supabase/supabase-js";
+import { useUsers } from "@/lib/hooks/useUser";
 
 export function AppSidebar() {
   const [isAddingBox, setIsAddingBox] = useState(false);
   const [newBoxName, setNewBoxName] = useState("");
   const { boxes, activeBox, addBox, selectBox } = useBoxes();
-  const [user, setUser] = useState<User | null>(null);
-
-  useEffect(() => {
     const { user, error } = await fetch("/api/user", {
-      credentials: "include",
-    });
-  }, []);
+  const { user } = useUsers();
 
   const handleAddBox = async () => {
     if (!newBoxName.trim()) return;
@@ -55,7 +51,7 @@ export function AppSidebar() {
       <SidebarHeader />
       <SidebarContent>
         <SidebarGroup>
-          <SidebarHeader>{user?.email}</SidebarHeader>
+          <SidebarHeader>{user?.username}</SidebarHeader>
         </SidebarGroup>
         <SidebarGroup>
           <SidebarGroupLabel>Box Management</SidebarGroupLabel>

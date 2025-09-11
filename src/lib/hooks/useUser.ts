@@ -2,10 +2,15 @@
 
 import useSWR from "swr";
 import { fetcher } from "../utils";
-import { User } from "@supabase/supabase-js";
+import { User } from "@/types/models";
 
 export function useUsers() {
-  const { data: user, error, isLoading, mutate } = useSWR("/api/user", fetcher);
+  const { data, error, isLoading, mutate } = useSWR<{ user: User }>(
+    "/api/user",
+    fetcher
+  );
+  console.log(data?.user);
+  const user = data ? data.user : null;
 
   return {
     user,
