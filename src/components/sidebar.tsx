@@ -17,12 +17,12 @@ import { useBoxes } from "@/lib/hooks/useBoxes";
 import { Box } from "@/types/models";
 import { User } from "@supabase/supabase-js";
 import { useUsers } from "@/lib/hooks/useUser";
+import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 
 export function AppSidebar() {
   const [isAddingBox, setIsAddingBox] = useState(false);
   const [newBoxName, setNewBoxName] = useState("");
   const { boxes, activeBox, addBox, selectBox } = useBoxes();
-    const { user, error } = await fetch("/api/user", {
   const { user } = useUsers();
 
   const handleAddBox = async () => {
@@ -48,11 +48,8 @@ export function AppSidebar() {
 
   return (
     <Sidebar>
-      <SidebarHeader />
-      <SidebarContent>
-        <SidebarGroup>
-          <SidebarHeader>{user?.username}</SidebarHeader>
-        </SidebarGroup>
+      <SidebarHeader className="text-xl p-6">StockTake</SidebarHeader>
+      <SidebarContent className="px-2">
         <SidebarGroup>
           <SidebarGroupLabel>Box Management</SidebarGroupLabel>
           <SidebarGroupContent>
@@ -124,7 +121,17 @@ export function AppSidebar() {
         </SidebarGroup>
         <SidebarGroup />
       </SidebarContent>
-      <SidebarFooter />
+      <SidebarFooter>
+        <SidebarGroup className="flex flex-row hover:bg-accent rounded-2xl">
+          <Avatar>
+            <AvatarImage src="https://github.com/shadcn.png" />
+            <AvatarFallback>CN</AvatarFallback>
+          </Avatar>
+          <SidebarHeader className="flex-1 pl-3 text-lg">
+            {user?.username}
+          </SidebarHeader>
+        </SidebarGroup>
+      </SidebarFooter>
     </Sidebar>
   );
 }
