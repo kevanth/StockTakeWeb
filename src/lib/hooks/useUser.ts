@@ -9,7 +9,7 @@ export function useUsers() {
     "/api/user",
     fetcher
   );
-  console.log(data?.user);
+
   const user = data ? data.user : null;
 
   return {
