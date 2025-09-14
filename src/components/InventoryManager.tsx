@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
 import { Item } from "@/types/models";
+import clsx from "clsx";
 
 export function InventoryManager() {
   const [newItemName, setNewItemName] = useState("");
@@ -16,7 +17,7 @@ export function InventoryManager() {
 
   const { items, itemsLoading, itemsError, addItem, updateItem, deleteItem } =
     useItems(activeBox?.id ?? null);
-
+  console.log(items);
   // Handle item operations
   const handleAddItem = async () => {
     if (!newItemName.trim() || !activeBox) return;
@@ -87,7 +88,12 @@ export function InventoryManager() {
               items.map((item: Item) => (
                 <div
                   key={item.id}
-                  className="flex items-center gap-2 p-3 border rounded-lg"
+                  className={clsx(
+                    "flex items-center gap-2 p-3 border rounded-lg",
+                    item.low_stock && "border-amber-400",
+                    (item.quantity_value === 0 || item.level === "empty") &&
+                      "border-red-500"
+                  )}
                 >
                   <div className="flex flex-col flex-1">
                     <span className="">{item.name}</span>
