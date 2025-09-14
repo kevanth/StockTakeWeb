@@ -2,23 +2,26 @@ import { createClient } from "@/lib/supabase/server";
 import { NextResponse } from "next/server";
 
 export async function GET(req: Request) {
-	try {
-		const { searchParams } = new URL(req.url)
-		const boxId = searchParams.get("boxId")
-		console.log("boxId: "+ boxId)
-		const supabase = await createClient()
-		const { data, error } = await supabase
-		.from("items")
-		.select("*")
-		.eq("box_id", boxId)
-		
-		const items =  data || []
+  try {
+    const { searchParams } = new URL(req.url);
+    const boxId = searchParams.get("boxId");
+    console.log("boxId: " + boxId);
+    const supabase = await createClient();
+    const { data, error } = await supabase
+      .from("items")
+      .select("*")
+      .eq("box_id", boxId);
 
-		return NextResponse.json({ items }, { status: 200 })
-	} catch (error: unknown) {
-		const message = error instanceof Error ? error.message : "Unexpected error";
-		return NextResponse.json({ error: "Failed to fetch items: " + message }, { status: 500 });
-	}
+    const items = data || [];
+
+    return NextResponse.json({ items }, { status: 200 });
+  } catch (error: unknown) {
+    const message = error instanceof Error ? error.message : "Unexpected error";
+    return NextResponse.json(
+      { error: "Failed to fetch items: " + message },
+      { status: 500 }
+    );
+  }
 }
 
 // export async function POST(req: Request) {
