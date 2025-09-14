@@ -69,19 +69,6 @@ export function InventoryManager() {
       <div className="space-y-4">
         <h3 className="text-xl font-semibold">Items in {activeBox?.name}</h3>
 
-        {/* Add New Item */}
-        <div className="flex gap-2">
-          <Input
-            placeholder="Enter item name"
-            value={newItemName}
-            onChange={(e) => setNewItemName(e.target.value)}
-            onKeyDown={(e) => e.key === "Enter" && handleAddItem()}
-          />
-          <Button onClick={handleAddItem} disabled={!newItemName.trim()}>
-            Add Item
-          </Button>
-        </div>
-
         {/* Items List */}
         {itemsLoading ? (
           <div>Loading items...</div>
