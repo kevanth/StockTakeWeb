@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { toast, Toaster } from "sonner";
 import { useBoxes } from "@/lib/hooks/useBoxes";
 import { useItems } from "@/lib/hooks/useItems";
@@ -9,15 +9,20 @@ import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
 import { Item } from "@/types/models";
 import clsx from "clsx";
+import { useClickOutside } from "@/lib/hooks/useClickOutside";
+import React from "react";
 
 export function InventoryManager() {
+  const [addItemMode, setAddItemMode] = useState(false);
   const [newItemName, setNewItemName] = useState("");
-
+  const clickOutsideRef = React.useRef(null);
   const { activeBox, boxesLoading, boxesError } = useBoxes();
+  const [searchItem, setSearchItem] = useState("");
 
+  // Fetch items for the active box
   const { items, itemsLoading, itemsError, addItem, updateItem, deleteItem } =
     useItems(activeBox?.id ?? null);
-  console.log(items);
+
   // Handle item operations
   const handleAddItem = async () => {
     if (!newItemName.trim() || !activeBox) return;
@@ -65,11 +70,24 @@ export function InventoryManager() {
     );
   }
 
+  useClickOutside(clickOutsideRef, () => {
+    if (addItemMode) {
+      setAddItemMode(false);
+      setNewItemName("");
+    }
+  });
+
   return (
     <div className="p-6 space-y-6">
       <div className="space-y-4">
         <h3 className="text-xl font-semibold">Items in {activeBox?.name}</h3>
-
+        <Input
+          type="text"
+          placeholder="Search items..."
+          value={searchItem}
+          onChange={(e) => setSearchItem(e.target.value)}
+          className="w-full"
+        ></Input>
         {/* Items List */}
         {itemsLoading ? (
           <div>Loading items...</div>
@@ -85,37 +103,81 @@ export function InventoryManager() {
                 <p className="text-sm mt-2">Add your first item above!</p>
               </div>
             ) : (
-              items.map((item: Item) => (
-                <div
-                  key={item.id}
-                  className={clsx(
-                    "flex items-center gap-2 p-3 border rounded-lg",
-                    item.low_stock && "border-amber-400",
-                    (item.quantity_value === 0 || item.level === "empty") &&
-                      "border-red-500"
-                  )}
-                >
-                  <div className="flex flex-col flex-1">
-                    <span className="">{item.name}</span>
-                    <div className="text-gray-400 font-light">
-                      {item.quantity_mode} : {item.quantity_value}
-                      {item.quantity_mode == "measure" ? item.unit_code : null}
-                    </div>
-                  </div>
-                  <Button
-                    size="sm"
-                    variant="destructive"
-                    onClick={() => handleDeleteItem(item.id)}
+              items
+                .filter((item: Item) =>
+                  item.name.toLowerCase().includes(searchItem.toLowerCase())
+                )
+                .map((item: Item) => (
+                  <div
+                    key={item.id}
+                    className={clsx(
+                      "flex items-center gap-2 p-3 border rounded-lg",
+                      item.low_stock && "border-amber-400",
+                      (item.quantity_value === 0 || item.level === "empty") &&
+                        "border-red-500"
+                    )}
                   >
-                    Delete
-                  </Button>
-                </div>
-              ))
+                    <div className="flex flex-col flex-1">
+                      <span className="">{item.name}</span>
+                      <div className="text-gray-400 font-light">
+                        {item.quantity_mode} : {item.quantity_value}
+                        {item.quantity_mode == "measure"
+                          ? item.unit_code
+                          : null}
+                      </div>
+                    </div>
+                    <Button
+                      size="sm"
+                      variant="destructive"
+                      onClick={() => handleDeleteItem(item.id)}
+                    >
+                      Delete
+                    </Button>
+                  </div>
+                ))
             )}
           </div>
         )}
       </div>
-
+      {addItemMode ? (
+        <div ref={clickOutsideRef} className="bg-white p-6 rounded-lg w-96">
+          <h2 className="text-lg font-semibold mb-4">Add New Item</h2>
+          <Input
+            type="text"
+            placeholder="Item Name"
+            value={newItemName}
+            onChange={(e) => setNewItemName(e.target.value)}
+            className="mb-4 w-full"
+          />
+          <div className="flex justify-end gap-2">
+            <Button
+              variant="outline"
+              onClick={() => {
+                setAddItemMode(false);
+                setNewItemName("");
+              }}
+            >
+              Cancel
+            </Button>
+            <Button
+              onClick={async () => {
+                await handleAddItem();
+                setAddItemMode(false);
+              }}
+            >
+              Add Item
+            </Button>
+          </div>
+        </div>
+      ) : (
+        <Button
+          onClick={() => {
+            setAddItemMode(true);
+          }}
+        >
+          Add Item
+        </Button>
+      )}
       <Toaster />
     </div>
   );
