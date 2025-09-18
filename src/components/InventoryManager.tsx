@@ -11,6 +11,7 @@ import { Item } from "@/types/models";
 import clsx from "clsx";
 import { useClickOutside } from "@/lib/hooks/useClickOutside";
 import React from "react";
+import { ItemForm } from "./itemForm";
 
 export function InventoryManager() {
   const [addItemMode, setAddItemMode] = useState(false);
@@ -140,34 +141,11 @@ export function InventoryManager() {
         )}
       </div>
       {addItemMode ? (
-        <div ref={clickOutsideRef} className="bg-white p-6 rounded-lg w-96">
-          <h2 className="text-lg font-semibold mb-4">Add New Item</h2>
-          <Input
-            type="text"
-            placeholder="Item Name"
-            value={newItemName}
-            onChange={(e) => setNewItemName(e.target.value)}
-            className="mb-4 w-full"
-          />
-          <div className="flex justify-end gap-2">
-            <Button
-              variant="outline"
-              onClick={() => {
-                setAddItemMode(false);
-                setNewItemName("");
-              }}
-            >
-              Cancel
-            </Button>
-            <Button
-              onClick={async () => {
-                await handleAddItem();
-                setAddItemMode(false);
-              }}
-            >
-              Add Item
-            </Button>
-          </div>
+        <div ref={clickOutsideRef}>
+          <ItemForm
+            onSubmit={handleAddItem}
+            onCancel={() => setAddItemMode(false)}
+          ></ItemForm>
         </div>
       ) : (
         <Button
