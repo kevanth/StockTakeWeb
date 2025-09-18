@@ -141,11 +141,13 @@ export function InventoryManager() {
         )}
       </div>
       {addItemMode ? (
-        <div ref={clickOutsideRef}>
-          <ItemForm
-            onSubmit={handleAddItem}
-            onCancel={() => setAddItemMode(false)}
-          ></ItemForm>
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+          <div className="w-1/3 bg-accent p-6 rounded-lg" ref={clickOutsideRef}>
+            <ItemForm
+              onSubmit={handleAddItem}
+              onCancel={() => setAddItemMode(false)}
+            ></ItemForm>
+          </div>
         </div>
       ) : (
         <Button
