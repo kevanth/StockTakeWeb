@@ -13,6 +13,7 @@ import React from "react";
 import { ItemForm } from "./itemForm";
 import {
   Dialog,
+  DialogClose,
   DialogContent,
   DialogDescription,
   DialogHeader,
@@ -140,7 +141,9 @@ export function InventoryManager() {
         )}
       </div>
       <Dialog>
-        <DialogTrigger>Add Item</DialogTrigger>
+        <DialogTrigger>
+          <Button variant="outline">Add Item</Button>
+        </DialogTrigger>
         <DialogContent>
           <DialogHeader>
             <DialogTitle>Add Item</DialogTitle>
@@ -149,7 +152,9 @@ export function InventoryManager() {
             onSubmit={() => {
               // handle submit
             }}
-            onCancel={() => {}}
+            onCancel={() => {
+              DialogClose;
+            }}
           />
         </DialogContent>
       </Dialog>

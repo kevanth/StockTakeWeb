@@ -116,9 +116,6 @@ export function ItemForm({ onSubmit, onCancel }) {
 
       {/* Actions */}
       <div className="flex justify-end gap-2">
-        <Button type="button" variant="outline" onClick={onCancel}>
-          Cancel
-        </Button>
         <Button type="submit">Save Item</Button>
       </div>
     </form>
