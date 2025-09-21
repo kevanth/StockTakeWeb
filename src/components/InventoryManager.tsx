@@ -25,7 +25,6 @@ export function InventoryManager() {
   const clickOutsideRef = React.useRef(null);
   const { activeBox, boxesLoading, boxesError } = useBoxes();
   const [searchItem, setSearchItem] = useState("");
-  const [openFormDialog, setOpenFormDialog] = useState(false);
 
   // Fetch items for the active box
   const { items, itemsLoading, itemsError, addItem, updateItem, deleteItem } =
@@ -140,7 +139,7 @@ export function InventoryManager() {
           </div>
         )}
       </div>
-      <Dialog open={openFormDialog} onOpenChange={setOpenFormDialog}>
+      <Dialog>
         <DialogTrigger>Add Item</DialogTrigger>
         <DialogContent>
           <DialogHeader>
@@ -149,9 +148,8 @@ export function InventoryManager() {
           <ItemForm
             onSubmit={() => {
               // handle submit
-              setOpenFormDialog(false);
             }}
-            onCancel={() => setOpenFormDialog(false)}
+            onCancel={() => {}}
           />
         </DialogContent>
       </Dialog>
