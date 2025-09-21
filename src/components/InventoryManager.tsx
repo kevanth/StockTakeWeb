@@ -9,16 +9,23 @@ import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
 import { Item } from "@/types/models";
 import clsx from "clsx";
-import { useClickOutside } from "@/lib/hooks/useClickOutside";
 import React from "react";
 import { ItemForm } from "./itemForm";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 
 export function InventoryManager() {
-  const [addItemMode, setAddItemMode] = useState(false);
   const [newItemName, setNewItemName] = useState("");
   const clickOutsideRef = React.useRef(null);
   const { activeBox, boxesLoading, boxesError } = useBoxes();
   const [searchItem, setSearchItem] = useState("");
+  const [openFormDialog, setOpenFormDialog] = useState(false);
 
   // Fetch items for the active box
   const { items, itemsLoading, itemsError, addItem, updateItem, deleteItem } =
@@ -70,13 +77,6 @@ export function InventoryManager() {
       </div>
     );
   }
-
-  useClickOutside(clickOutsideRef, () => {
-    if (addItemMode) {
-      setAddItemMode(false);
-      setNewItemName("");
-    }
-  });
 
   return (
     <div className="p-6 space-y-6">
@@ -140,24 +140,21 @@ export function InventoryManager() {
           </div>
         )}
       </div>
-      {addItemMode ? (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-          <div className="w-1/3 bg-accent p-6 rounded-lg" ref={clickOutsideRef}>
-            <ItemForm
-              onSubmit={handleAddItem}
-              onCancel={() => setAddItemMode(false)}
-            ></ItemForm>
-          </div>
-        </div>
-      ) : (
-        <Button
-          onClick={() => {
-            setAddItemMode(true);
-          }}
-        >
-          Add Item
-        </Button>
-      )}
+      <Dialog open={openFormDialog} onOpenChange={setOpenFormDialog}>
+        <DialogTrigger>Add Item</DialogTrigger>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Add Item</DialogTitle>
+          </DialogHeader>
+          <ItemForm
+            onSubmit={() => {
+              // handle submit
+              setOpenFormDialog(false);
+            }}
+            onCancel={() => setOpenFormDialog(false)}
+          />
+        </DialogContent>
+      </Dialog>
       <Toaster />
     </div>
   );
