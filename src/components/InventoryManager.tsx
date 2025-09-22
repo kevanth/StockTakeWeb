@@ -22,10 +22,9 @@ import {
 } from "@/components/ui/dialog";
 
 export function InventoryManager() {
-  const [newItemName, setNewItemName] = useState("");
-  const clickOutsideRef = React.useRef(null);
   const { activeBox, boxesLoading, boxesError } = useBoxes();
   const [searchItem, setSearchItem] = useState("");
+  const [open, setOpen] = useState(false);
 
   // Fetch items for the active box
   const { items, itemsLoading, itemsError, addItem, updateItem, deleteItem } =
@@ -33,17 +32,20 @@ export function InventoryManager() {
 
   // Handle item operations
   const handleAddItem = async (item: NewItem) => {
-    if (!newItemName.trim() || !activeBox) return;
+    if (!item.name.trim() || !activeBox) return;
 
     try {
-      await addItem({
-        item: item,
-      });
-      setNewItemName("");
+      item.box_id = activeBox.id;
+      item.owner_id = activeBox.owner_id;
+      await addItem(item);
       toast.success("Item added successfully!");
     } catch (error) {
-      toast.error("Failed to add item");
+      toast.error(
+        error instanceof Error ? error.message : "Failed to add item"
+      );
     }
+
+    setOpen(false);
   };
 
   const handleDeleteItem = async (id: string) => {
@@ -139,7 +141,7 @@ export function InventoryManager() {
           </div>
         )}
       </div>
-      <Dialog>
+      <Dialog open={open} onOpenChange={setOpen}>
         <DialogTrigger>
           <Button variant="outline">Add Item</Button>
         </DialogTrigger>
@@ -148,8 +150,8 @@ export function InventoryManager() {
             <DialogTitle>Add Item</DialogTitle>
           </DialogHeader>
           <ItemForm
-            onSubmit={() => {
-              handleAddItem();
+            onSubmit={(item: NewItem) => {
+              handleAddItem(item);
             }}
           />
         </DialogContent>

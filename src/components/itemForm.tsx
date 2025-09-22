@@ -29,12 +29,8 @@ export function ItemForm({ onSubmit }: { onSubmit: (item: NewItem) => void }) {
       owner_id: "uuid-owner",
       quantity_mode: "count",
       quantity_value: 5,
-      unit_code: "pcs",
-      level: "full",
-      reorder_threshold: 2,
-      reorder_level: "low",
-      low_stock: false,
     });
+    
   };
 
   return (

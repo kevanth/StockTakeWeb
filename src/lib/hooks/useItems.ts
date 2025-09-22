@@ -17,14 +17,17 @@ export function useItems(boxId: string | null) {
   const items = data?.items || [];
 
   // Add a new item and refresh cache
-  async function addItem(arg: { item: NewItem }) {
+  async function addItem(item: NewItem) {
     const res = await fetch("/api/item", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       credentials: "include",
-      body: JSON.stringify(payload),
+      body: JSON.stringify({ item }),
     });
-    if (!res.ok) throw new Error("Failed to add item");
+    if (!res.ok) {
+      const errorData = await res.json();
+      throw new Error(errorData.error || "Failed to add item");
+    }
     await mutate(); // refresh items list
   }
 
