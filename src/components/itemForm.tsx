@@ -11,8 +11,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { NewItem } from "@/types/models";
 
-export function ItemForm({ onSubmit, onCancel }) {
+export function ItemForm({ onSubmit }: { onSubmit: (item: NewItem) => void }) {
   const [name, setName] = useState("");
   const [quantityMode, setQuantityMode] = useState("count");
   const [quantityValue, setQuantityValue] = useState(0);
@@ -23,12 +24,16 @@ export function ItemForm({ onSubmit, onCancel }) {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     onSubmit({
-      name,
-      quantity_mode: quantityMode,
-      quantity_value: quantityValue,
-      unit_code: unitCode,
-      level,
-      low_stock: lowStock,
+      name: "Apples",
+      box_id: "uuid-box",
+      owner_id: "uuid-owner",
+      quantity_mode: "count",
+      quantity_value: 5,
+      unit_code: "pcs",
+      level: "full",
+      reorder_threshold: 2,
+      reorder_level: "low",
+      low_stock: false,
     });
   };
 
@@ -63,15 +68,17 @@ export function ItemForm({ onSubmit, onCancel }) {
       </div>
 
       {/* Quantity Value */}
-      <div className="flex flex-col gap-2">
-        <Label htmlFor="quantityValue">Quantity Value</Label>
-        <Input
-          id="quantityValue"
-          type="number"
-          value={quantityValue}
-          onChange={(e) => setQuantityValue(Number(e.target.value))}
-        />
-      </div>
+      {(quantityMode === "count" || quantityMode === "measure") && (
+        <div className="flex flex-col gap-2">
+          <Label htmlFor="quantityValue">Quantity Value</Label>
+          <Input
+            id="quantityValue"
+            type="number"
+            value={quantityValue}
+            onChange={(e) => setQuantityValue(Number(e.target.value))}
+          />
+        </div>
+      )}
 
       {/* Unit Code */}
       {quantityMode === "measure" && (
@@ -88,20 +95,22 @@ export function ItemForm({ onSubmit, onCancel }) {
       )}
 
       {/* Level */}
-      <div className="flex flex-col gap-2">
-        <Label htmlFor="level">Level</Label>
-        <Select value={level} onValueChange={setLevel}>
-          <SelectTrigger id="level">
-            <SelectValue placeholder="Select level" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="empty">Empty</SelectItem>
-            <SelectItem value="low">Low</SelectItem>
-            <SelectItem value="medium">Medium</SelectItem>
-            <SelectItem value="full">Full</SelectItem>
-          </SelectContent>
-        </Select>
-      </div>
+      {quantityMode === "level" && (
+        <div className="flex flex-col gap-2">
+          <Label htmlFor="level">Level</Label>
+          <Select value={level} onValueChange={setLevel}>
+            <SelectTrigger id="level">
+              <SelectValue placeholder="Select level" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="empty">Empty</SelectItem>
+              <SelectItem value="low">Low</SelectItem>
+              <SelectItem value="medium">Medium</SelectItem>
+              <SelectItem value="full">Full</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
+      )}
 
       {/* Low Stock */}
       <div className="flex items-center gap-2">
@@ -116,7 +125,9 @@ export function ItemForm({ onSubmit, onCancel }) {
 
       {/* Actions */}
       <div className="flex justify-end gap-2">
-        <Button type="submit">Save Item</Button>
+        <Button type="submit" onClick={() => handleSubmit}>
+          Save Item
+        </Button>
       </div>
     </form>
   );

@@ -2,7 +2,7 @@
 
 import useSWR from "swr";
 import { fetcher } from "@/lib/utils";
-import { Item } from "@/types/models";
+import { Item, NewItem } from "@/types/models";
 
 export function useItems(boxId: string | null) {
   const { data, error, isLoading, mutate } = useSWR<{ items: Item[] }>(
@@ -17,11 +17,7 @@ export function useItems(boxId: string | null) {
   const items = data?.items || [];
 
   // Add a new item and refresh cache
-  async function addItem(payload: {
-    name: string;
-    boxId: string;
-    [key: string]: any;
-  }) {
+  async function addItem(arg: { item: NewItem }) {
     const res = await fetch("/api/item", {
       method: "POST",
       headers: { "Content-Type": "application/json" },

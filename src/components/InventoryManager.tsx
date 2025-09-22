@@ -7,7 +7,7 @@ import { useItems } from "@/lib/hooks/useItems";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
-import { Item } from "@/types/models";
+import { Item, NewItem } from "@/types/models";
 import clsx from "clsx";
 import React from "react";
 import { ItemForm } from "./itemForm";
@@ -32,13 +32,12 @@ export function InventoryManager() {
     useItems(activeBox?.id ?? null);
 
   // Handle item operations
-  const handleAddItem = async () => {
+  const handleAddItem = async (item: NewItem) => {
     if (!newItemName.trim() || !activeBox) return;
 
     try {
       await addItem({
-        name: newItemName.trim(),
-        boxId: activeBox.id,
+        item: item,
       });
       setNewItemName("");
       toast.success("Item added successfully!");
@@ -150,10 +149,7 @@ export function InventoryManager() {
           </DialogHeader>
           <ItemForm
             onSubmit={() => {
-              // handle submit
-            }}
-            onCancel={() => {
-              DialogClose;
+              handleAddItem();
             }}
           />
         </DialogContent>
