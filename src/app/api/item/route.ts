@@ -28,10 +28,10 @@ export async function POST(req: Request) {
     const supabase = await createClient();
     const { data, error } = await supabase.from("items").insert(item).select();
 
-    return NextResponse.json({ status: 200 });
     if (error) {
       throw error;
     }
+    return NextResponse.json({ status: 200 });
   } catch (err) {
     console.error(err);
     return NextResponse.json({ error: "Unexpected error" }, { status: 500 });

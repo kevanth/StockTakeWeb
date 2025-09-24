@@ -16,21 +16,25 @@ import { NewItem } from "@/types/models";
 export function ItemForm({ onSubmit }: { onSubmit: (item: NewItem) => void }) {
   const [name, setName] = useState("");
   const [quantityMode, setQuantityMode] = useState("count");
-  const [quantityValue, setQuantityValue] = useState(0);
-  const [unitCode, setUnitCode] = useState("pcs");
+  const [quantityValue, setQuantityValue] = useState();
+  const [unitCode, setUnitCode] = useState<string | null>(null);
   const [level, setLevel] = useState("full");
   const [lowStock, setLowStock] = useState(false);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     onSubmit({
-      name: "Apples",
-      box_id: "uuid-box",
-      owner_id: "uuid-owner",
-      quantity_mode: "count",
-      quantity_value: 5,
+      name: name.trim(),
+      box_id: "", // to be set in parent
+      owner_id: "", // to be set in parent
+      quantity_mode: quantityMode as "count" | "measure" | "level",
+      unit_code: unitCode? unitCode.trim() : null,
+      quantity_value: quantityValue ? quantityValue : null,
+      level:
+        quantityMode === "level"
+          ? (level as "full" | "empty" | "low" | "half" | "high")
+          : null,
     });
-    
   };
 
   return (
