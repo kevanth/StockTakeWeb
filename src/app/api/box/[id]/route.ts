@@ -1,4 +1,3 @@
-import Box from "@/class/box";
 import { createClient } from "@/lib/supabase/server";
 import { NextResponse } from "next/server";
 
@@ -9,9 +8,12 @@ export async function PUT(
   try {
     const { searchParams } = new URL(req.url);
     const box_name = searchParams.get("box_name");
-    
+
     if (!box_name) {
-      return NextResponse.json({ error: "Box name is required" }, { status: 400 });
+      return NextResponse.json(
+        { error: "Box name is required" },
+        { status: 400 }
+      );
     }
 
     const supabase = await createClient();
@@ -41,10 +43,7 @@ export async function DELETE(
 ) {
   try {
     const supabase = await createClient();
-    const { error } = await supabase
-      .from("boxes")
-      .delete()
-      .eq("id", params.id);
+    const { error } = await supabase.from("boxes").delete().eq("id", params.id);
 
     if (error) {
       console.error("Failed to delete box", error);
