@@ -19,7 +19,7 @@ export function ItemForm({ onSubmit }: { onSubmit: (item: NewItem) => void }) {
   const [quantityValue, setQuantityValue] = useState();
   const [unitCode, setUnitCode] = useState<string | null>(null);
   const [level, setLevel] = useState("full");
-  const [lowStock, setLowStock] = useState(false);
+  const [reorderLevel, setReorderLevel] = useState("");
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -28,11 +28,15 @@ export function ItemForm({ onSubmit }: { onSubmit: (item: NewItem) => void }) {
       box_id: "", // to be set in parent
       owner_id: "", // to be set in parent
       quantity_mode: quantityMode as "count" | "measure" | "level",
-      unit_code: unitCode? unitCode.trim() : null,
+      unit_code: unitCode ? unitCode.trim() : null,
       quantity_value: quantityValue ? quantityValue : null,
       level:
         quantityMode === "level"
           ? (level as "full" | "empty" | "low" | "half" | "high")
+          : null,
+      reorder_level:
+        quantityMode === "level"
+          ? (reorderLevel as "full" | "empty" | "low" | "half" | "high")
           : null,
     });
   };
@@ -109,19 +113,20 @@ export function ItemForm({ onSubmit }: { onSubmit: (item: NewItem) => void }) {
               <SelectItem value="full">Full</SelectItem>
             </SelectContent>
           </Select>
+          <Label> Reorder Level </Label>
+          <Select value={reorderLevel} onValueChange={setReorderLevel}>
+            <SelectTrigger id="level">
+              <SelectValue placeholder="Select level" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="empty">Empty</SelectItem>
+              <SelectItem value="low">Low</SelectItem>
+              <SelectItem value="medium">Medium</SelectItem>
+              <SelectItem value="full">Full</SelectItem>
+            </SelectContent>
+          </Select>
         </div>
       )}
-
-      {/* Low Stock */}
-      <div className="flex items-center gap-2">
-        <input
-          type="checkbox"
-          id="lowStock"
-          checked={lowStock}
-          onChange={(e) => setLowStock(e.target.checked)}
-        />
-        <Label htmlFor="lowStock">Low Stock Warning</Label>
-      </div>
 
       {/* Actions */}
       <div className="flex justify-end gap-2">
