@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -11,15 +11,32 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { NewItem } from "@/types/models";
+import { Item, NewItem } from "@/types/models";
 
-export function ItemForm({ onSubmit }: { onSubmit: (item: NewItem) => void }) {
+export function ItemForm({
+  item,
+  onSubmit,
+}: {
+  item: Item | null;
+  onSubmit: (item: NewItem) => void;
+}) {
   const [name, setName] = useState("");
   const [quantityMode, setQuantityMode] = useState("count");
-  const [quantityValue, setQuantityValue] = useState();
+  const [quantityValue, setQuantityValue] = useState<number | null>(null);
   const [unitCode, setUnitCode] = useState<string | null>(null);
   const [level, setLevel] = useState("full");
   const [reorderLevel, setReorderLevel] = useState("");
+
+  useEffect(() => {
+    if (item) {
+      setName(item.name);
+      setQuantityMode(item.quantity_mode);
+      setQuantityValue(item.quantity_value || null);
+      setUnitCode(item.unit_code || null);
+      setLevel(item.level || "full");
+      setReorderLevel(item.reorder_level || "");
+    }
+  }, []);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();

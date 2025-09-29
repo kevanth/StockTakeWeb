@@ -110,7 +110,7 @@ export function InventoryManager() {
                   item.name.toLowerCase().includes(searchItem.toLowerCase())
                 )
                 .map((item: Item) => (
-                  <div
+                  <Button
                     key={item.id}
                     className={clsx(
                       "flex items-center gap-2 p-3 border rounded-lg",
@@ -135,7 +135,7 @@ export function InventoryManager() {
                     >
                       Delete
                     </Button>
-                  </div>
+                  </Button>
                 ))
             )}
           </div>
