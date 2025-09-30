@@ -167,7 +167,7 @@ export function InventoryManager() {
       </Dialog>
 
       {/* Item Form Dialog */}
-      <Dialog open={editForm}>
+      <Dialog open={editForm} onOpenChange={setEditForm}>
         <DialogContent>
           <DialogHeader>
             <DialogTitle>Add Item</DialogTitle>
