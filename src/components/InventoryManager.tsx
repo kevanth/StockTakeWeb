@@ -20,11 +20,14 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import { set } from "lodash";
 
 export function InventoryManager() {
   const { activeBox, boxesLoading, boxesError } = useBoxes();
   const [searchItem, setSearchItem] = useState("");
   const [open, setOpen] = useState(false);
+  const [editForm, setEditForm] = useState(false);
+  const [editingItem, setEditingItem] = useState<Item | null>(null);
 
   // Fetch items for the active box
   const { items, itemsLoading, itemsError, addItem, updateItem, deleteItem } =
@@ -110,7 +113,7 @@ export function InventoryManager() {
                   item.name.toLowerCase().includes(searchItem.toLowerCase())
                 )
                 .map((item: Item) => (
-                  <Button
+                  <div
                     key={item.id}
                     className={clsx(
                       "flex items-center gap-2 p-3 border rounded-lg",
@@ -118,6 +121,10 @@ export function InventoryManager() {
                       (item.quantity_value === 0 || item.level === "empty") &&
                         "border-red-500"
                     )}
+                    onClick={() => {
+                      setEditingItem(item);
+                      setEditForm(true);
+                    }}
                   >
                     <div className="flex flex-col flex-1">
                       <span className="">{item.name}</span>
@@ -135,12 +142,13 @@ export function InventoryManager() {
                     >
                       Delete
                     </Button>
-                  </Button>
+                  </div>
                 ))
             )}
           </div>
         )}
       </div>
+      {/* Add Item Dialog */}
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogTrigger>
           <Button variant="outline">Add Item</Button>
@@ -154,6 +162,21 @@ export function InventoryManager() {
               handleAddItem(item);
             }}
             item={null}
+          />
+        </DialogContent>
+      </Dialog>
+
+      {/* Item Form Dialog */}
+      <Dialog open={editForm}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Add Item</DialogTitle>
+          </DialogHeader>
+          <ItemForm
+            onSubmit={(item: NewItem) => {
+              handleAddItem(item);
+            }}
+            item={editingItem}
           />
         </DialogContent>
       </Dialog>
