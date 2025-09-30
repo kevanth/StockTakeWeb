@@ -153,6 +153,7 @@ export function InventoryManager() {
             onSubmit={(item: NewItem) => {
               handleAddItem(item);
             }}
+            item={null}
           />
         </DialogContent>
       </Dialog>
