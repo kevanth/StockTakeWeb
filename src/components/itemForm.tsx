@@ -36,6 +36,8 @@ export function ItemForm({
       setUnitCode(item.unit_code || null);
       setLevel(item.level || "full");
       setReorderLevel(item.reorder_level || "");
+      console.log("mode=", JSON.stringify(quantityMode));
+      console.log("mode=", quantityMode);
     }
   }, []);
 
@@ -77,7 +79,14 @@ export function ItemForm({
       {/* Quantity Mode */}
       <div className="flex flex-col gap-2">
         <Label htmlFor="quantityMode">Quantity Mode</Label>
-        <Select value={quantityMode} onValueChange={setQuantityMode}>
+        <Select
+          value={quantityMode}
+          onValueChange={(v) => {
+            if (v === "count" || v === "measure" || v === "level") {
+              setQuantityMode(v);
+            }
+          }}
+        >
           <SelectTrigger id="quantityMode">
             <SelectValue placeholder="Select a mode" />
           </SelectTrigger>
