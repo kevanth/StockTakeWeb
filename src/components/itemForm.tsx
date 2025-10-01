@@ -29,6 +29,7 @@ export function ItemForm({
 
   useEffect(() => {
     if (item) {
+      console.log(item);
       setName(item.name);
       setQuantityMode(item.quantity_mode);
       setQuantityValue(item.quantity_value || null);
@@ -95,8 +96,12 @@ export function ItemForm({
           <Input
             id="quantityValue"
             type="number"
-            value={quantityValue}
-            onChange={(e) => setQuantityValue(Number(e.target.value))}
+            value={quantityValue !== null ? quantityValue : ""}
+            onChange={(e) =>
+              setQuantityValue(
+                e.target.value === "" ? null : Number(e.target.value)
+              )
+            }
           />
         </div>
       )}
@@ -108,7 +113,7 @@ export function ItemForm({
           <Input
             id="unitCode"
             type="text"
-            value={unitCode}
+            value={unitCode ?? ""}
             onChange={(e) => setUnitCode(e.target.value)}
             placeholder="e.g. kg, L"
           />
