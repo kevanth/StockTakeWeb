@@ -154,9 +154,6 @@ export function InventoryManager() {
           <Button variant="outline">Add Item</Button>
         </DialogTrigger>
         <DialogContent>
-          <DialogHeader>
-            <DialogTitle>Add Item</DialogTitle>
-          </DialogHeader>
           <ItemForm
             onSubmit={(item: NewItem) => {
               handleAddItem(item);
@@ -166,12 +163,9 @@ export function InventoryManager() {
         </DialogContent>
       </Dialog>
 
-      {/* Item Form Dialog */}
+      {/* Item Edit Form Dialog */}
       <Dialog open={editForm} onOpenChange={setEditForm}>
         <DialogContent>
-          <DialogHeader>
-            <DialogTitle>Edit Item</DialogTitle>
-          </DialogHeader>
           <ItemForm
             onSubmit={(item: NewItem) => {
               handleAddItem(item);

@@ -65,15 +65,15 @@ export function ItemForm({
     <form onSubmit={handleSubmit} className="space-y-4">
       {/* Name */}
       <div className="flex flex-col gap-2">
-        <Label htmlFor="name">Item Name</Label>
-        <Input
-          id="name"
-          type="text"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-          placeholder="e.g. Rice"
-          required
-        />
+        <div
+          contentEditable
+          suppressContentEditableWarning
+          onBlur={(e) => setName(e.target.textContent || "")}
+          className="text-lg font-semibold border-b border-gray-200 pb-2 outline-none focus:border-b-2 focus:border-blue-500 min-h-[1.5rem]"
+          style={{ minHeight: "1.5rem" }}
+        >
+          {name || "Item Name"}
+        </div>
       </div>
 
       {/* Quantity Mode */}
