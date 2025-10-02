@@ -51,6 +51,23 @@ export function InventoryManager() {
     setOpen(false);
   };
 
+  const handleEditItem = async (item: NewItem) => {
+    console.log("handleEditItem", item);
+    if (!item.name.trim() || !activeBox) return;
+    if (!item.id) {
+      toast.error("Item ID is missing.");
+      return;
+    }
+    try {
+      await updateItem(item.id, item);
+      toast.success("Item updated successfully!");
+    } catch (error) {
+      toast.error(
+        error instanceof Error ? error.message : "Failed to update item"
+      );
+    }
+  };
+
   const handleDeleteItem = async (id: string) => {
     if (!confirm("Are you sure you want to delete this item?")) return;
 
@@ -168,7 +185,7 @@ export function InventoryManager() {
         <DialogContent>
           <ItemForm
             onSubmit={(item: NewItem) => {
-              handleAddItem(item);
+              handleEditItem(item);
             }}
             item={editingItem}
           />

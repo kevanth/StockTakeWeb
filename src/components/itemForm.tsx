@@ -29,7 +29,7 @@ export function ItemForm({
 
   useEffect(() => {
     if (item) {
-      console.log(item);
+      console.log("form", item);
       setName(item.name);
       setQuantityMode(item.quantity_mode);
       setQuantityValue(item.quantity_value || null);
@@ -58,6 +58,7 @@ export function ItemForm({
         quantityMode === "level"
           ? (reorderLevel as "full" | "empty" | "low" | "half" | "high")
           : null,
+      id: item?.id || "",
     });
   };
 
