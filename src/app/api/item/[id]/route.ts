@@ -23,9 +23,10 @@ export async function DELETE(
 
 export async function PUT(
   req: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id } = await params;
     const payload = await req.json();
     
     const supabase = await createClient();
@@ -34,17 +35,18 @@ export async function PUT(
       .update({
         name: payload.name,
         quantity_mode: payload.quantity_mode,
-        quantity: payload.quantity,
+        quantity_value: payload.quantity_value,
         reorder_level: payload.reorder_level,
         category: payload.category,
         description: payload.description,
         image_url: payload.image_url,
       })
-      .eq("id", params.id)
+      .eq("id", id)
       .select()
       .single();
 
     if (error) {
+      console.log("error", error);
       throw new Error("Could not update item");
     }
 

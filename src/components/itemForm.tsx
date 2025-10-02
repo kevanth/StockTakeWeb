@@ -23,6 +23,7 @@ export function ItemForm({
   const [name, setName] = useState("");
   const [quantityMode, setQuantityMode] = useState("count");
   const [quantityValue, setQuantityValue] = useState<number | null>(null);
+  const [reorderThreshold, setReorderThreshold] = useState<number | null>(null);
   const [unitCode, setUnitCode] = useState<string | null>(null);
   const [level, setLevel] = useState("full");
   const [reorderLevel, setReorderLevel] = useState("");
@@ -36,8 +37,7 @@ export function ItemForm({
       setUnitCode(item.unit_code || null);
       setLevel(item.level || "full");
       setReorderLevel(item.reorder_level || "");
-      console.log("mode=", JSON.stringify(quantityMode));
-      console.log("mode=", quantityMode);
+      setReorderThreshold(item.reorder_threshold || null);
     }
   }, []);
 
@@ -59,6 +59,10 @@ export function ItemForm({
           ? (reorderLevel as "full" | "empty" | "low" | "half" | "high")
           : null,
       id: item?.id || "",
+      reorder_threshold:
+        quantityMode === "count" || quantityMode === "measure"
+          ? reorderThreshold
+          : null,
     });
   };
 
@@ -102,13 +106,24 @@ export function ItemForm({
       {/* Quantity Value */}
       {(quantityMode === "count" || quantityMode === "measure") && (
         <div className="flex flex-col gap-2">
-          <Label htmlFor="quantityValue">Quantity Value</Label>
+          <Label htmlFor="quantityValue">Quantity</Label>
           <Input
             id="quantityValue"
             type="number"
             value={quantityValue !== null ? quantityValue : ""}
             onChange={(e) =>
               setQuantityValue(
+                e.target.value === "" ? null : Number(e.target.value)
+              )
+            }
+          />
+          <Label htmlFor="reorderThreshold">Reorder Treshold</Label>
+          <Input
+            id="reorderThreshold"
+            type="number"
+            value={reorderThreshold !== null ? reorderThreshold : ""}
+            onChange={(e) =>
+              setReorderThreshold(
                 e.target.value === "" ? null : Number(e.target.value)
               )
             }
