@@ -40,13 +40,14 @@ export async function PUT(
         category: payload.category,
         description: payload.description,
         image_url: payload.image_url,
+        reorder_threshold: payload.reorder_threshold
       })
       .eq("id", id)
       .select()
       .single();
 
     if (error) {
-      console.log("error", error);
+      console.log("error", error); 
       throw new Error("Could not update item");
     }
 
