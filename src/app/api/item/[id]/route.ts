@@ -27,7 +27,7 @@ export async function PUT(
 ) {
   try {
     const { id } = await params;
-    const payload = await req.json();
+    const payload = await req.json(); 
     
     const supabase = await createClient();
     const { data, error } = await supabase

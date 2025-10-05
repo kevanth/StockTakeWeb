@@ -21,10 +21,13 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { set } from "lodash";
+import { ListFilter } from "lucide-react";
 
 export function InventoryManager() {
   const { activeBox, boxesLoading, boxesError } = useBoxes();
   const [searchItem, setSearchItem] = useState("");
+  const [filter, setFilter] = useState("all");
+
   const [open, setOpen] = useState(false);
   const [editForm, setEditForm] = useState(false);
   const [editingItem, setEditingItem] = useState<Item | null>(null);
@@ -52,7 +55,6 @@ export function InventoryManager() {
   };
 
   const handleEditItem = async (item: NewItem) => {
-    console.log("handleEditItem", item);
     if (!item.name.trim() || !activeBox) return;
     if (!item.id) {
       toast.error("Item ID is missing.");
@@ -103,13 +105,19 @@ export function InventoryManager() {
     <div className="p-6 space-y-6">
       <div className="space-y-4">
         <h3 className="text-xl font-semibold">Items in {activeBox?.name}</h3>
-        <Input
-          type="text"
-          placeholder="Search items..."
-          value={searchItem}
-          onChange={(e) => setSearchItem(e.target.value)}
-          className="w-full"
-        ></Input>
+        <div className="flex flex-row gap-2 items-center">
+          <Input
+            type="text"
+            placeholder="Search items..."
+            value={searchItem}
+            onChange={(e) => setSearchItem(e.target.value)}
+            className="w-full"
+          ></Input>
+          <Button>
+            <ListFilter onClick={() => setSearchItem("")} />
+          </Button>
+        </div>
+        {}
         {/* Items List */}
         {itemsLoading ? (
           <div>Loading items...</div>
