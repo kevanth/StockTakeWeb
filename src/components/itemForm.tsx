@@ -58,7 +58,7 @@ export function ItemForm({
         quantityMode === "level"
           ? (reorderLevel as "full" | "empty" | "low" | "half" | "high")
           : null,
-      id: item?.id || "",
+      id: item?.id || undefined,
       reorder_threshold:
         quantityMode === "count" || quantityMode === "measure"
           ? reorderThreshold
