@@ -29,7 +29,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { set } from "lodash";
-import { ListFilter } from "lucide-react";
+import { ListFilter, X } from "lucide-react";
 
 export function InventoryManager() {
   const { activeBox, boxesLoading, boxesError } = useBoxes();
@@ -126,16 +126,24 @@ export function InventoryManager() {
               <ListFilter />
             </DropdownMenuTrigger>
             <DropdownMenuContent>
-              <DropdownMenuLabel onClick={() => setFilter("empty")}>
-                My Account
-              </DropdownMenuLabel>
+              <DropdownMenuLabel>filter</DropdownMenuLabel>
               <DropdownMenuSeparator />
-              <DropdownMenuItem onClick={() => setFilter("low")}>
-                Profile
+              <DropdownMenuItem
+                onClick={() => {
+                  filter === "low" ? setFilter("*") : setFilter("low");
+                }}
+                className={filter === "low" ? "bg-accent" : ""}
+              >
+                low
               </DropdownMenuItem>
-              <DropdownMenuItem>Billing</DropdownMenuItem>
-              <DropdownMenuItem>Team</DropdownMenuItem>
-              <DropdownMenuItem>Subscription</DropdownMenuItem>
+              <DropdownMenuItem
+                onClick={() => {
+                  filter === "empty" ? setFilter("*") : setFilter("empty");
+                }}
+                className={filter === "empty" ? "bg-accent" : ""}
+              >
+                empty
+              </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
         </div>
@@ -192,11 +200,11 @@ export function InventoryManager() {
                       </div>
                     </div>
                     <Button
-                      size="sm"
+                      size="icon"
                       variant="destructive"
                       onClick={() => handleDeleteItem(item.id)}
                     >
-                      Delete
+                      <X />
                     </Button>
                   </div>
                 ))
