@@ -34,7 +34,7 @@ import { ListFilter } from "lucide-react";
 export function InventoryManager() {
   const { activeBox, boxesLoading, boxesError } = useBoxes();
   const [searchItem, setSearchItem] = useState("");
-  const [filter, setFilter] = useState("all");
+  const [filter, setFilter] = useState("*");
 
   const [open, setOpen] = useState(false);
   const [editForm, setEditForm] = useState(false);
@@ -126,9 +126,13 @@ export function InventoryManager() {
               <ListFilter />
             </DropdownMenuTrigger>
             <DropdownMenuContent>
-              <DropdownMenuLabel>My Account</DropdownMenuLabel>
+              <DropdownMenuLabel onClick={() => setFilter("empty")}>
+                My Account
+              </DropdownMenuLabel>
               <DropdownMenuSeparator />
-              <DropdownMenuItem>Profile</DropdownMenuItem>
+              <DropdownMenuItem onClick={() => setFilter("low")}>
+                Profile
+              </DropdownMenuItem>
               <DropdownMenuItem>Billing</DropdownMenuItem>
               <DropdownMenuItem>Team</DropdownMenuItem>
               <DropdownMenuItem>Subscription</DropdownMenuItem>
@@ -152,9 +156,18 @@ export function InventoryManager() {
               </div>
             ) : (
               items
-                .filter((item: Item) =>
-                  item.name.toLowerCase().includes(searchItem.toLowerCase())
-                )
+                .filter((item: Item) => {
+                  const matchSearch = item.name
+                    .toLowerCase()
+                    .includes(searchItem.toLowerCase());
+                  const matchFilter =
+                    filter === "empty"
+                      ? item.quantity_value === 0 || item.level === "empty"
+                      : filter === "low"
+                      ? item.low_stock
+                      : true;
+                  return matchSearch && matchFilter;
+                })
                 .map((item: Item) => (
                   <div
                     key={item.id}
