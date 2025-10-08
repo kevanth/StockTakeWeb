@@ -113,6 +113,7 @@ export function InventoryManager() {
     <div className="p-6 space-y-6">
       <div className="space-y-4">
         <h3 className="text-xl font-semibold">Items in {activeBox?.name}</h3>
+        {/** Search and Filter */}
         <div className="flex flex-row gap-2 items-center">
           <Input
             type="text"
@@ -147,7 +148,7 @@ export function InventoryManager() {
             </DropdownMenuContent>
           </DropdownMenu>
         </div>
-        {}
+
         {/* Items List */}
         {itemsLoading ? (
           <div>Loading items...</div>
