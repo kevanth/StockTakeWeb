@@ -11,7 +11,7 @@ export function useBoxes() {
     fetcher,
     { revalidateOnFocus: false }
   );
-  console.log(data);
+  
   const boxes = data?.boxes ?? [];
 
   // selection is URL-based

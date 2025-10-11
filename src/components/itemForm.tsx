@@ -12,6 +12,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Item, NewItem } from "@/types/models";
+import { useBoxes } from "@/lib/hooks/useBoxes";
 
 export function ItemForm({
   item,
@@ -27,6 +28,8 @@ export function ItemForm({
   const [unitCode, setUnitCode] = useState<string | null>(null);
   const [level, setLevel] = useState("full");
   const [reorderLevel, setReorderLevel] = useState("");
+  const { activeBox } = useBoxes();
+  const { handleBoxSelect, setHandleBoxSelec } = useState(false);
 
   useEffect(() => {
     if (item) {
@@ -69,15 +72,20 @@ export function ItemForm({
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
       {/* Name */}
-      <div className="flex flex-col gap-2">
+      <div className="flex flex-row gap-2">
         <div
           contentEditable
           suppressContentEditableWarning
           onBlur={(e) => setName(e.target.textContent || "")}
-          className="text-lg font-semibold border-b border-gray-200 pb-2 outline-none focus:border-b-2 focus:border-blue-500 min-h-[1.5rem]"
-          style={{ minHeight: "1.5rem" }}
+          className="text-lg flex-2 font-semibold border-b border-gray-200 pb-2 outline-none focus:border-b-2 focus:border-blue-500 min-h-[1.5rem]"
         >
           {name || "Item Name"}
+        </div>
+        <div
+          className="flex-1
+        onclick= {setHandleBoxSelect(true)} "
+        >
+          {activeBox?.name}
         </div>
       </div>
 
