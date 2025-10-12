@@ -29,7 +29,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { set } from "lodash";
-import { ListFilter, X } from "lucide-react";
+import { ListFilter, X, ArrowUpIcon, ArrowDownIcon } from "lucide-react";
 
 export function InventoryManager() {
   const { activeBox, boxesLoading, boxesError } = useBoxes();
@@ -96,17 +96,53 @@ export function InventoryManager() {
     );
   }
 
-  if (!activeBox && !boxesLoading) {
-    return (
-      <div className="p-6 space-y-6">
-        <Separator />
-        <div className="text-gray-500">
-          Please select a box from the sidebar.
-        </div>
-        <Toaster />
-      </div>
-    );
-  }
+  const handleQuantityChangeItem = async (
+    id: string,
+    type: "increase" | "decrease"
+  ) => {
+    const item = items.find((item: Item) => item.id === id);
+    if (!item) return;
+
+    if (item.quantity_mode === "count" || item.quantity_mode === "measure") {
+      const updatedQuantity =
+        type === "increase"
+          ? (item.quantity_value || 0) + 1
+          : Math.max((item.quantity_value || 0) - 1, 0);
+
+      handleEditItem({
+        ...item,
+        quantity_value: updatedQuantity,
+      });
+    } else if (item.quantity_mode === "level") {
+      const currentLevel = item.level || "full";
+      let newLevel: "empty" | "low" | "half" | "high" | "full";
+
+      if (type === "increase") {
+        newLevel =
+          currentLevel === "empty"
+            ? "low"
+            : currentLevel === "low"
+            ? "half"
+            : currentLevel === "half"
+            ? "high"
+            : "full";
+      } else {
+        newLevel =
+          currentLevel === "full"
+            ? "high"
+            : currentLevel === "high"
+            ? "half"
+            : currentLevel === "half"
+            ? "low"
+            : "empty";
+      }
+
+      handleEditItem({
+        ...item,
+        level: newLevel,
+      });
+    }
+  };
 
   return (
     <div className="p-6 space-y-6">
@@ -200,10 +236,29 @@ export function InventoryManager() {
                           : null}
                       </div>
                     </div>
+                    <div className="flex flex-col">
+                      <ArrowUpIcon
+                        className="size-4"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleQuantityChangeItem(item.id, "increase");
+                        }}
+                      />
+                      <ArrowDownIcon
+                        className="size-4"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleQuantityChangeItem(item.id, "decrease");
+                        }}
+                      />
+                    </div>
                     <Button
                       size="icon"
                       variant="destructive"
-                      onClick={() => handleDeleteItem(item.id)}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleDeleteItem(item.id);
+                      }}
                     >
                       <X />
                     </Button>
