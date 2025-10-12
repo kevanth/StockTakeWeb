@@ -11,8 +11,14 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Item, NewItem } from "@/types/models";
+import { Box, Item, NewItem } from "@/types/models";
 import { useBoxes } from "@/lib/hooks/useBoxes";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "./ui/dropdown-menu";
 
 export function ItemForm({
   item,
@@ -28,8 +34,8 @@ export function ItemForm({
   const [unitCode, setUnitCode] = useState<string | null>(null);
   const [level, setLevel] = useState("full");
   const [reorderLevel, setReorderLevel] = useState("");
-  const { activeBox } = useBoxes();
-  const { handleBoxSelect, setHandleBoxSelec } = useState(false);
+  const { activeBox, boxes } = useBoxes();
+  const [newBox, setNewBox] = useState<Box | null>(null);
 
   useEffect(() => {
     if (item) {
@@ -48,7 +54,6 @@ export function ItemForm({
     e.preventDefault();
     onSubmit({
       name: name.trim(),
-      box_id: "", // to be set in parent
       owner_id: "", // to be set in parent
       quantity_mode: quantityMode as "count" | "measure" | "level",
       unit_code: unitCode ? unitCode.trim() : null,
@@ -66,6 +71,7 @@ export function ItemForm({
         quantityMode === "count" || quantityMode === "measure"
           ? reorderThreshold
           : null,
+      box_id: newBox?.id || activeBox?.id,
     });
   };
 
@@ -81,12 +87,24 @@ export function ItemForm({
         >
           {name || "Item Name"}
         </div>
-        <div
-          className="flex-1
-        onclick= {setHandleBoxSelect(true)} "
-        >
-          {activeBox?.name}
-        </div>
+        <DropdownMenu>
+          <DropdownMenuTrigger>
+            {newBox?.name || activeBox?.name}
+          </DropdownMenuTrigger>
+          <DropdownMenuContent>
+            {boxes.map((box) => (
+              <DropdownMenuItem
+                key={box.id}
+                onClick={() => {
+                  setNewBox(box);
+                  console.log(box);
+                }}
+              >
+                {box.name}
+              </DropdownMenuItem>
+            ))}
+          </DropdownMenuContent>
+        </DropdownMenu>
       </div>
 
       {/* Quantity Mode */}
@@ -185,9 +203,7 @@ export function ItemForm({
 
       {/* Actions */}
       <div className="flex justify-end gap-2">
-        <Button type="submit" onClick={() => handleSubmit}>
-          Save Item
-        </Button>
+        <Button type="submit">Save Item</Button>
       </div>
     </form>
   );

@@ -40,7 +40,8 @@ export async function PUT(
         category: payload.category,
         description: payload.description,
         image_url: payload.image_url,
-        reorder_threshold: payload.reorder_threshold
+        reorder_threshold: payload.reorder_threshold,
+        box_id: payload.box_id,
       })
       .eq("id", id)
       .select()

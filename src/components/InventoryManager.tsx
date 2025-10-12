@@ -49,7 +49,6 @@ export function InventoryManager() {
     if (!item.name.trim() || !activeBox) return;
 
     try {
-      item.box_id = activeBox.id;
       item.owner_id = activeBox.owner_id;
       await addItem(item);
       toast.success("Item added successfully!");
