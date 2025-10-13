@@ -145,7 +145,7 @@ export function InventoryManager() {
   };
 
   return (
-    <div className="p-6 space-y-6">
+    <div className="space-y-6">
       <div className="space-y-4">
         <h3 className="text-xl font-semibold">Items in {activeBox?.name}</h3>
         {/** Search and Filter */}

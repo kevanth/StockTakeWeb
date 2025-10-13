@@ -9,9 +9,11 @@ export default function Inventory() {
     <div className="min-h-screen">
       <SidebarProvider>
         <AppSidebar />
-        <main>
-          <SidebarTrigger className="mt-6 ml-6" />
-          <InventoryManager />
+        <main className="flex-1 flex flex-col items-center">
+          <SidebarTrigger className="mt-6 ml-6 self-start" />
+          <div className="w-full max-w-6xl mx-auto px-6 py-4">
+            <InventoryManager />
+          </div>
         </main>
       </SidebarProvider>
     </div>
