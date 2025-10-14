@@ -19,6 +19,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "./ui/dropdown-menu";
+import { BoxIcon } from "lucide-react";
 
 export function ItemForm({
   item,
@@ -78,34 +79,33 @@ export function ItemForm({
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
       {/* Name */}
-      <div className="flex flex-row gap-2">
-        <div
-          contentEditable
-          suppressContentEditableWarning
-          onBlur={(e) => setName(e.target.textContent || "")}
-          className="text-lg flex-2 font-semibold border-b border-gray-200 pb-2 outline-none focus:border-b-2 focus:border-blue-500 min-h-[1.5rem]"
-        >
-          {name || "Item Name"}
-        </div>
-        <DropdownMenu>
-          <DropdownMenuTrigger>
-            {newBox?.name || activeBox?.name}
-          </DropdownMenuTrigger>
-          <DropdownMenuContent>
-            {boxes.map((box) => (
-              <DropdownMenuItem
-                key={box.id}
-                onClick={() => {
-                  setNewBox(box);
-                  console.log(box);
-                }}
-              >
-                {box.name}
-              </DropdownMenuItem>
-            ))}
-          </DropdownMenuContent>
-        </DropdownMenu>
+      <div
+        contentEditable
+        suppressContentEditableWarning
+        onBlur={(e) => setName(e.target.textContent || "")}
+        className="text-lg flex-2 font-semibold border-b border-gray-200 pb-2 outline-none focus:border-b-2 focus:border-blue-500 min-h-[1.5rem]"
+      >
+        {name || "Item Name"}
       </div>
+      {/* Box */}
+      <DropdownMenu>
+        <DropdownMenuTrigger className="flex items-center gap-2">
+          <BoxIcon /> {newBox?.name || activeBox?.name}
+        </DropdownMenuTrigger>
+        <DropdownMenuContent>
+          {boxes.map((box) => (
+            <DropdownMenuItem
+              key={box.id}
+              onClick={() => {
+                setNewBox(box);
+                console.log(box);
+              }}
+            >
+              {box.name}
+            </DropdownMenuItem>
+          ))}
+        </DropdownMenuContent>
+      </DropdownMenu>
 
       {/* Quantity Mode */}
       <div className="flex flex-col gap-2">
