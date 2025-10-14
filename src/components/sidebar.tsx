@@ -18,6 +18,13 @@ import { Box } from "@/types/models";
 import { User } from "@supabase/supabase-js";
 import { useUsers } from "@/lib/hooks/useUser";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
+import { EllipsisIcon } from "lucide-react";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "./ui/dropdown-menu";
 
 export function AppSidebar() {
   const [isAddingBox, setIsAddingBox] = useState(false);
@@ -58,13 +65,23 @@ export function AppSidebar() {
                 <SidebarMenuItem key={box.id}>
                   <SidebarMenuButton
                     className={`truncate ${
-                      activeBox && activeBox.id === box.id
+                      activeBox.id === box.id
                         ? "bg-accent text-white"
                         : "  text-white"
-                    }`}
+                    } flex justify-between`}
                     onClick={() => handleBoxSelect(box)}
                   >
                     {box.name}
+                    {activeBox.id === box.id && (
+                      <DropdownMenu>
+                        <DropdownMenuTrigger>
+                          <EllipsisIcon />
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent>
+                          <DropdownMenuItem>test</DropdownMenuItem>
+                        </DropdownMenuContent>
+                      </DropdownMenu>
+                    )}
                   </SidebarMenuButton>
                 </SidebarMenuItem>
               ))}
