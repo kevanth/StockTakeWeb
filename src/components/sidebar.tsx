@@ -24,7 +24,13 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "./ui/dropdown-menu";
-import { Dialog, DialogContent, DialogTitle } from "./ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+} from "./ui/dialog";
 
 export function AppSidebar() {
   const [isAddingBox, setIsAddingBox] = useState(false);
@@ -77,16 +83,6 @@ export function AppSidebar() {
                       }}
                     >
                       {box.name}
-                      {activeBox.id === box.id && (
-                        <DropdownMenu>
-                          <DropdownMenuTrigger>
-                            <EllipsisIcon />
-                          </DropdownMenuTrigger>
-                          <DropdownMenuContent>
-                            <DropdownMenuItem>test</DropdownMenuItem>
-                          </DropdownMenuContent>
-                        </DropdownMenu>
-                      )}
                     </SidebarMenuButton>
                   </SidebarMenuItem>
                 ))}
@@ -157,8 +153,15 @@ export function AppSidebar() {
       </Sidebar>
 
       <Dialog open={boxDialog} onOpenChange={setBoxDialog}>
-        <DialogTitle>Edit Box</DialogTitle>
-        <DialogContent>a</DialogContent>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Edit Box</DialogTitle>
+            <DialogDescription>
+              Make changes to your box here, click save when done
+            </DialogDescription>
+          </DialogHeader>
+          a
+        </DialogContent>
       </Dialog>
     </div>
   );
