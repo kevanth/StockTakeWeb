@@ -196,7 +196,7 @@ export function InventoryManager() {
             {items.length === 0 ? (
               <div className="text-gray-500 text-center p-8">
                 <p>No items in this box yet.</p>
-                <p className="text-sm mt-2">Add your first item above!</p>
+                <p className="text-sm mt-2">Add your first item below!</p>
               </div>
             ) : (
               items
