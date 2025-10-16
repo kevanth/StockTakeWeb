@@ -17,7 +17,7 @@ import { useBoxes } from "@/lib/hooks/useBoxes";
 import { Box } from "@/types/models";
 import { useUsers } from "@/lib/hooks/useUser";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
-import { EllipsisIcon } from "lucide-react";
+import { Edit, EllipsisIcon } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -160,7 +160,18 @@ export function AppSidebar() {
               Make changes to your box here, click save when done
             </DialogDescription>
           </DialogHeader>
-          a
+          <hr />
+          <form>
+            {activeBox && (
+              <div
+                contentEditable
+                onBlur={(e) => setNewBoxName(e.target.textContent || "")}
+                className="hover:bg-accent p-2 w-fit"
+              >
+                activeBox.name
+              </div>
+            )}
+          </form>
         </DialogContent>
       </Dialog>
     </div>
