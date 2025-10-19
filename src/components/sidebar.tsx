@@ -171,6 +171,10 @@ export function AppSidebar() {
                 activeBox.name
               </div>
             )}
+            <div>
+              Members
+              <div>{/* List of members would go here */}</div>
+            </div>
           </form>
         </DialogContent>
       </Dialog>
