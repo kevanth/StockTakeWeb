@@ -18,7 +18,13 @@ export async function GET() {
       throw new Error("Could not load boxes");
     }
 
-    return NextResponse.json({ boxes: boxes ?? [] }, { status: 200 });
+    // Transform the data to match BoxWithMembers type
+    const boxesWithMembers = boxes?.map(box => ({
+      ...box,
+      members: box.box_member_profiles || []
+    })) || [];
+
+    return NextResponse.json({ boxes: boxesWithMembers }, { status: 200 });
   } catch (error) {
     const message = error instanceof Error ? error.message : "Unknown error";
     return NextResponse.json({ error: message }, { status: 401 });

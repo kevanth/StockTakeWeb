@@ -172,6 +172,14 @@ export function AppSidebar() {
                 activeBox.name
               </div>
             )}
+            <Label>Members</Label>
+            <div className="flex flex-col gap-2">
+              {activeBox?.members.map((member) => (
+                <div key={member.user_id}>
+                  {member.username || member.full_name}
+                </div>
+              ))}
+            </div>
           </form>
         </DialogContent>
       </Dialog>
