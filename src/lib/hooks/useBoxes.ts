@@ -3,15 +3,15 @@
 import useSWR from "swr";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { fetcher } from "@/lib/utils";
-import { Box } from "@/types/models";
+import { Box, BoxWithMembers } from "@/types/models";
 
 export function useBoxes() {
-  const { data, error, isLoading, mutate } = useSWR<{ boxes: Box[] }>(
+  const { data, error, isLoading, mutate } = useSWR<{ boxes: BoxWithMembers[] }>(
     "/api/box",
     fetcher,
     { revalidateOnFocus: false }
   );
-  
+
   const boxes = data?.boxes ?? [];
 
   // selection is URL-based
@@ -35,11 +35,12 @@ export function useBoxes() {
   async function addBox(payload: { name: string }) {
     try {
       // Optimistic update
-      const optimisticBox: Box = {
+      const optimisticBox: BoxWithMembers = {
         id: `temp-${Date.now()}`,
         name: payload.name,
         owner_id: "",
         created_at: new Date().toISOString(),
+        members: [],
       };
       const optimisticData = { boxes: [...boxes, optimisticBox] };
 

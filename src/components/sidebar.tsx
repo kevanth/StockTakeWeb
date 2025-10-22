@@ -31,6 +31,7 @@ import {
   DialogTitle,
   DialogDescription,
 } from "./ui/dialog";
+import { Label } from "./ui/label";
 
 export function AppSidebar() {
   const [isAddingBox, setIsAddingBox] = useState(false);
@@ -166,15 +167,11 @@ export function AppSidebar() {
               <div
                 contentEditable
                 onBlur={(e) => setNewBoxName(e.target.textContent || "")}
-                className="hover:bg-accent p-2 w-fit"
+                className="hover:bg-accent ph-2 mb-2 w-fit"
               >
                 activeBox.name
               </div>
             )}
-            <div>
-              Members
-              <div>{/* List of members would go here */}</div>
-            </div>
           </form>
         </DialogContent>
       </Dialog>
