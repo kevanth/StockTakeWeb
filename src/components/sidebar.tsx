@@ -36,9 +36,16 @@ import { Label } from "./ui/label";
 export function AppSidebar() {
   const [isAddingBox, setIsAddingBox] = useState(false);
   const [newBoxName, setNewBoxName] = useState("");
-  const { boxes, activeBox, addBox, selectBox } = useBoxes();
+  const { boxes, activeBox, addBox, selectBox, updateBox } = useBoxes();
   const { user } = useUsers();
   const [boxDialog, setBoxDialog] = useState(false);
+
+  // Set default box name when dialog opens
+  useEffect(() => {
+    if (boxDialog && activeBox) {
+      setNewBoxName(activeBox.name);
+    }
+  }, [boxDialog, activeBox]);
 
   const handleAddBox = async () => {
     if (!newBoxName.trim()) return;
@@ -59,6 +66,17 @@ export function AppSidebar() {
 
   const handleBoxSelect = (box: Box) => {
     selectBox(box.id);
+  };
+
+  const handleUpdateBox = async () => {
+    if (!newBoxName.trim() || !activeBox) return;
+
+    try {
+      await updateBox(activeBox.id, { name: newBoxName.trim() });
+      setBoxDialog(false);
+    } catch (error) {
+      console.error("Failed to update box:", error);
+    }
   };
 
   return (
@@ -154,33 +172,72 @@ export function AppSidebar() {
       </Sidebar>
 
       <Dialog open={boxDialog} onOpenChange={setBoxDialog}>
-        <DialogContent>
+        <DialogContent className="max-w-md">
           <DialogHeader>
             <DialogTitle>Edit Box</DialogTitle>
             <DialogDescription>
               Make changes to your box here, click save when done
             </DialogDescription>
           </DialogHeader>
-          <hr />
-          <form>
-            {activeBox && (
-              <div
-                contentEditable
-                onBlur={(e) => setNewBoxName(e.target.textContent || "")}
-                className="hover:bg-accent ph-2 mb-2 w-fit"
-              >
-                activeBox.name
-              </div>
-            )}
-            <Label>Members</Label>
-            <div className="flex flex-col gap-2">
-              {activeBox?.members.map((member) => (
-                <div key={member.user_id}>
-                  {member.username || member.full_name}
-                </div>
-              ))}
+
+          <div className="space-y-4">
+            {/* Box Name */}
+            <div className="space-y-2">
+              <Label htmlFor="box-name">Box Name</Label>
+              <Input
+                id="box-name"
+                value={newBoxName}
+                onChange={(e) => setNewBoxName(e.target.value)}
+                placeholder="Enter box name"
+                className="w-full"
+              />
             </div>
-          </form>
+
+            {/* Members Section */}
+            <div className="space-y-2">
+              <Label>Members ({activeBox?.members.length || 0})</Label>
+              <div className="space-y-2 max-h-48 overflow-y-auto">
+                {activeBox?.members && activeBox.members.length > 0 ? (
+                  activeBox.members.map((member) => (
+                    <div
+                      key={member.user_id}
+                      className="flex items-center justify-between p-2 border rounded-lg bg-gray-50"
+                    >
+                      <div className="flex flex-col">
+                        <span className="font-medium">
+                          {member.full_name ||
+                            member.username ||
+                            "Unknown User"}
+                        </span>
+                        {member.role && (
+                          <span className="text-xs text-gray-500 capitalize">
+                            {member.role}
+                          </span>
+                        )}
+                      </div>
+                    </div>
+                  ))
+                ) : (
+                  <div className="text-center text-gray-500 py-4">
+                    No members yet
+                  </div>
+                )}
+              </div>
+            </div>
+
+            {/* Action Buttons */}
+            <div className="flex justify-end gap-2 pt-4">
+              <Button variant="outline" onClick={() => setBoxDialog(false)}>
+                Cancel
+              </Button>
+              <Button
+                onClick={handleUpdateBox}
+                disabled={!newBoxName.trim() || newBoxName === activeBox?.name}
+              >
+                Save Changes
+              </Button>
+            </div>
+          </div>
         </DialogContent>
       </Dialog>
     </div>
