@@ -17,13 +17,6 @@ import { useBoxes } from "@/lib/hooks/useBoxes";
 import { Box } from "@/types/models";
 import { useUsers } from "@/lib/hooks/useUser";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
-import { Edit, EllipsisIcon } from "lucide-react";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "./ui/dropdown-menu";
 import {
   Dialog,
   DialogContent,
@@ -36,7 +29,8 @@ import { Label } from "./ui/label";
 export function AppSidebar() {
   const [isAddingBox, setIsAddingBox] = useState(false);
   const [newBoxName, setNewBoxName] = useState("");
-  const { boxes, activeBox, addBox, selectBox, updateBox } = useBoxes();
+  const { boxes, activeBox, addBox, selectBox, updateBox, deleteBox } =
+    useBoxes();
   const { user } = useUsers();
   const [boxDialog, setBoxDialog] = useState(false);
 
@@ -76,6 +70,17 @@ export function AppSidebar() {
       setBoxDialog(false);
     } catch (error) {
       console.error("Failed to update box:", error);
+    }
+  };
+
+  const handleRemoveBox = async () => {
+    if (!activeBox) return;
+
+    try {
+      await deleteBox(activeBox.id);
+      setBoxDialog(false);
+    } catch (error) {
+      console.error("Failed to delete box:", error);
     }
   };
 
@@ -226,16 +231,26 @@ export function AppSidebar() {
             </div>
 
             {/* Action Buttons */}
-            <div className="flex justify-end gap-2 pt-4">
-              <Button variant="outline" onClick={() => setBoxDialog(false)}>
-                Cancel
-              </Button>
-              <Button
-                onClick={handleUpdateBox}
-                disabled={!newBoxName.trim() || newBoxName === activeBox?.name}
-              >
-                Save Changes
-              </Button>
+
+            <div className="flex flex-row gap-2 pt-4">
+              <div>
+                <Button variant="outline" onClick={handleRemoveBox}>
+                  Delete Box
+                </Button>
+              </div>
+              <div className="flex justify-end gap-2 flex-1">
+                <Button variant="outline" onClick={() => setBoxDialog(false)}>
+                  Cancel
+                </Button>
+                <Button
+                  onClick={handleUpdateBox}
+                  disabled={
+                    !newBoxName.trim() || newBoxName === activeBox?.name
+                  }
+                >
+                  Save Changes
+                </Button>
+              </div>
             </div>
           </div>
         </DialogContent>
