@@ -28,7 +28,6 @@ export async function PUT(
   try {
     const { id } = await params;
     const payload = await req.json(); 
-    
     const supabase = await createClient();
     const { data, error } = await supabase
       .from("items")
@@ -37,6 +36,9 @@ export async function PUT(
         quantity_mode: payload.quantity_mode,
         quantity_value: payload.quantity_value,
         reorder_level: payload.reorder_level,
+        level: payload.level,
+        unit_code: payload.unit_code,
+        updated_at: payload.updated_at,
         category: payload.category,
         description: payload.description,
         image_url: payload.image_url,

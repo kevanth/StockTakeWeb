@@ -14,8 +14,7 @@ export function useItems(boxId: string | null) {
     }
   );
 
-  const items = data?.items || [];
-
+  const items = data?.items.sort((a, b) => a.name.localeCompare(b.name)) || [];
   // Add a new item and refresh cache
   async function addItem(item: NewItem) {
     const res = await fetch("/api/item", {
@@ -52,6 +51,7 @@ export function useItems(boxId: string | null) {
     if (!res.ok) throw new Error("Failed to delete item");
     await mutate(); // refresh items list
   }
+  
 
   return {
     items,

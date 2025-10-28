@@ -6,7 +6,6 @@ import { useBoxes } from "@/lib/hooks/useBoxes";
 import { useItems } from "@/lib/hooks/useItems";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Separator } from "@/components/ui/separator";
 import { Item, NewItem } from "@/types/models";
 import clsx from "clsx";
 import React from "react";
@@ -29,7 +28,13 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { set } from "lodash";
-import { ListFilter, X, ArrowUpIcon, ArrowDownIcon } from "lucide-react";
+import {
+  ListFilter,
+  X,
+  ArrowUpIcon,
+  ArrowDownIcon,
+  ArrowUpDownIcon,
+} from "lucide-react";
 
 export function InventoryManager() {
   const { activeBox, boxesLoading, boxesError } = useBoxes();
@@ -41,8 +46,15 @@ export function InventoryManager() {
   const [editingItem, setEditingItem] = useState<Item | null>(null);
 
   // Fetch items for the active box
-  const { items, itemsLoading, itemsError, addItem, updateItem, deleteItem } =
-    useItems(activeBox?.id ?? null);
+  const {
+    items,
+    itemsLoading,
+    itemsError,
+    addItem,
+    updateItem,
+    deleteItem,
+    sortBy,
+  } = useItems(activeBox?.id ?? null);
 
   // Handle item operations
   const handleAddItem = async (item: NewItem) => {
@@ -148,7 +160,7 @@ export function InventoryManager() {
     <div className="space-y-6">
       <div className="space-y-4">
         <h3 className="text-xl font-semibold">Items in {activeBox?.name}</h3>
-        {/** Search and Filter */}
+        {/** Search and Filter and Sort*/}
         <div className="flex flex-row gap-2 items-center">
           <Input
             type="text"
@@ -157,6 +169,7 @@ export function InventoryManager() {
             onChange={(e) => setSearchItem(e.target.value)}
             className="w-full"
           ></Input>
+          {/** Filter */}
           <DropdownMenu>
             <DropdownMenuTrigger>
               <ListFilter />
@@ -270,7 +283,7 @@ export function InventoryManager() {
       </div>
       {/* Add Item Dialog */}
       <Dialog open={open} onOpenChange={setOpen}>
-        <DialogTrigger>
+        <DialogTrigger asChild>
           <Button variant="outline">Add Item</Button>
         </DialogTrigger>
         <DialogContent>
