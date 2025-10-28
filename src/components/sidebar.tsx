@@ -201,7 +201,7 @@ export function AppSidebar() {
                   activeBox.members.map((member) => (
                     <div
                       key={member.user_id}
-                      className="flex items-center justify-between p-2 border rounded-lg bg-gray-50"
+                      className="flex items-center justify-between p-2 border rounded-lg"
                     >
                       <div className="flex flex-col">
                         <span className="font-medium">
