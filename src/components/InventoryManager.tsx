@@ -46,15 +46,8 @@ export function InventoryManager() {
   const [editingItem, setEditingItem] = useState<Item | null>(null);
 
   // Fetch items for the active box
-  const {
-    items,
-    itemsLoading,
-    itemsError,
-    addItem,
-    updateItem,
-    deleteItem,
-    sortBy,
-  } = useItems(activeBox?.id ?? null);
+  const { items, itemsLoading, itemsError, addItem, updateItem, deleteItem } =
+    useItems(activeBox?.id ?? null);
 
   // Handle item operations
   const handleAddItem = async (item: NewItem) => {
