@@ -236,7 +236,7 @@ export function InventoryManager() {
                       <span className="">{item.name}</span>
                       <div className="text-gray-400 font-light">
                         {item.quantity_mode} :{" "}
-                        {item.quantity_value ? item.quantity_value : item.level}
+                        {item.quantity_value ?? item.level}
                         {item.quantity_mode == "measure"
                           ? item.unit_code
                           : null}

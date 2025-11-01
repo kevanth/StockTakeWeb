@@ -43,22 +43,35 @@ export function ItemForm({
       console.log("form", item);
       setName(item.name);
       setQuantityMode(item.quantity_mode);
-      setQuantityValue(item.quantity_value || null);
-      setUnitCode(item.unit_code || null);
-      setLevel(item.level || "full");
-      setReorderLevel(item.reorder_level || "");
-      setReorderThreshold(item.reorder_threshold || null);
+      setQuantityValue(item.quantity_value ?? null);
+      setUnitCode(item.unit_code ?? null);
+      setLevel(item.level ?? "full");
+      setReorderLevel(item.reorder_level ?? "");
+      setReorderThreshold(item.reorder_threshold ?? null);
     }
   }, []);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    console.log(
+      "form",
+      name,
+      quantityMode,
+      quantityValue,
+      unitCode,
+      level,
+      reorderLevel,
+      reorderThreshold
+    );
     onSubmit({
       name: name.trim(),
       owner_id: "", // to be set in parent
       quantity_mode: quantityMode as "count" | "measure" | "level",
       unit_code: unitCode ? unitCode.trim() : null,
-      quantity_value: quantityValue ? quantityValue : null,
+      quantity_value:
+        quantityMode === "count" || quantityMode === "measure"
+          ? quantityValue ?? null
+          : null,
       level:
         quantityMode === "level"
           ? (level as "full" | "empty" | "low" | "half" | "high")
@@ -70,7 +83,7 @@ export function ItemForm({
       id: item?.id || undefined,
       reorder_threshold:
         quantityMode === "count" || quantityMode === "measure"
-          ? reorderThreshold
+          ? reorderThreshold ?? null
           : null,
       box_id: newBox?.id || activeBox?.id,
     });
@@ -136,7 +149,7 @@ export function ItemForm({
           <Input
             id="quantityValue"
             type="number"
-            value={quantityValue !== null ? quantityValue : ""}
+            value={quantityValue ?? ""}
             onChange={(e) =>
               setQuantityValue(
                 e.target.value === "" ? null : Number(e.target.value)
@@ -147,7 +160,7 @@ export function ItemForm({
           <Input
             id="reorderThreshold"
             type="number"
-            value={reorderThreshold !== null ? reorderThreshold : ""}
+            value={reorderThreshold ?? ""}
             onChange={(e) =>
               setReorderThreshold(
                 e.target.value === "" ? null : Number(e.target.value)
