@@ -10,21 +10,14 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useBoxes } from "@/lib/hooks/useBoxes";
 import { Box } from "@/types/models";
 import { useUsers } from "@/lib/hooks/useUser";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogDescription,
-} from "./ui/dialog";
-import { Label } from "./ui/label";
+import { EditBoxDialog } from "./EditBoxDialog";
 
 export function AppSidebar() {
   const [isAddingBox, setIsAddingBox] = useState(false);
@@ -33,13 +26,6 @@ export function AppSidebar() {
     useBoxes();
   const { user } = useUsers();
   const [boxDialog, setBoxDialog] = useState(false);
-
-  // Set default box name when dialog opens
-  useEffect(() => {
-    if (boxDialog && activeBox) {
-      setNewBoxName(activeBox.name);
-    }
-  }, [boxDialog, activeBox]);
 
   const handleAddBox = async () => {
     if (!newBoxName.trim()) return;
@@ -62,26 +48,12 @@ export function AppSidebar() {
     selectBox(box.id);
   };
 
-  const handleUpdateBox = async () => {
-    if (!newBoxName.trim() || !activeBox) return;
-
-    try {
-      await updateBox(activeBox.id, { name: newBoxName.trim() });
-      setBoxDialog(false);
-    } catch (error) {
-      console.error("Failed to update box:", error);
-    }
+  const handleUpdateBox = async (boxId: string, name: string) => {
+    await updateBox(boxId, { name });
   };
 
-  const handleRemoveBox = async () => {
-    if (!activeBox) return;
-
-    try {
-      await deleteBox(activeBox.id);
-      setBoxDialog(false);
-    } catch (error) {
-      console.error("Failed to delete box:", error);
-    }
+  const handleDeleteBox = async (boxId: string) => {
+    await deleteBox(boxId);
   };
 
   return (
@@ -176,85 +148,13 @@ export function AppSidebar() {
         </SidebarFooter>
       </Sidebar>
 
-      <Dialog open={boxDialog} onOpenChange={setBoxDialog}>
-        <DialogContent className="max-w-md">
-          <DialogHeader>
-            <DialogTitle>Edit Box</DialogTitle>
-            <DialogDescription>
-              Make changes to your box here, click save when done
-            </DialogDescription>
-          </DialogHeader>
-
-          <div className="space-y-4">
-            {/* Box Name */}
-            <div className="space-y-2">
-              <Label htmlFor="box-name">Box Name</Label>
-              <Input
-                id="box-name"
-                value={newBoxName}
-                onChange={(e) => setNewBoxName(e.target.value)}
-                placeholder="Enter box name"
-                className="w-full"
-              />
-            </div>
-
-            {/* Members Section */}
-            <div className="space-y-2">
-              <Label>Members ({activeBox?.members.length || 0})</Label>
-              <div className="space-y-2 max-h-48 overflow-y-auto">
-                {activeBox?.members && activeBox.members.length > 0 ? (
-                  activeBox.members.map((member) => (
-                    <div
-                      key={member.user_id}
-                      className="flex items-center justify-between p-2 border rounded-lg"
-                    >
-                      <div className="flex flex-col">
-                        <span className="font-medium">
-                          {member.full_name ||
-                            member.username ||
-                            "Unknown User"}
-                        </span>
-                        {member.role && (
-                          <span className="text-xs text-gray-500 capitalize">
-                            {member.role}
-                          </span>
-                        )}
-                      </div>
-                    </div>
-                  ))
-                ) : (
-                  <div className="text-center text-gray-500 py-4">
-                    No members yet
-                  </div>
-                )}
-              </div>
-            </div>
-
-            {/* Action Buttons */}
-
-            <div className="flex flex-row gap-2 pt-4">
-              <div>
-                <Button variant="outline" onClick={handleRemoveBox}>
-                  Delete Box
-                </Button>
-              </div>
-              <div className="flex justify-end gap-2 flex-1">
-                <Button variant="outline" onClick={() => setBoxDialog(false)}>
-                  Cancel
-                </Button>
-                <Button
-                  onClick={handleUpdateBox}
-                  disabled={
-                    !newBoxName.trim() || newBoxName === activeBox?.name
-                  }
-                >
-                  Save Changes
-                </Button>
-              </div>
-            </div>
-          </div>
-        </DialogContent>
-      </Dialog>
+      <EditBoxDialog
+        open={boxDialog}
+        onOpenChange={setBoxDialog}
+        activeBox={activeBox}
+        onUpdate={handleUpdateBox}
+        onDelete={handleDeleteBox}
+      />
     </div>
   );
 }
