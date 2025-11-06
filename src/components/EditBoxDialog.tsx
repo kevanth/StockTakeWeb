@@ -38,6 +38,7 @@ export function EditBoxDialog({
     if (open && activeBox) {
       setBoxName(activeBox.name);
     }
+    setIsAddingMember(false);
   }, [open, activeBox]);
 
   const handleUpdateBox = async () => {
