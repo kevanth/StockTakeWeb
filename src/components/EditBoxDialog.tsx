@@ -52,6 +52,13 @@ export function EditBoxDialog({
     }
   };
 
+  const handleAddMember = async (email: string) => {
+    if (!email.trim()) return;
+    console.log("email", email);
+    // await onAddMember(activeBox.id, email.trim());
+    setNewMemberEmail("");
+  };
+
   const handleRemoveBox = async () => {
     if (!activeBox) return;
 
@@ -115,19 +122,29 @@ export function EditBoxDialog({
               )}
             </div>
           </div>
-          <Button
-            variant="outline"
-            onClick={() => {
-              setIsAddingMember(true);
-            }}
-          >
-            <PlusIcon />
-          </Button>
-          {isAddingMember && (
+          {isAddingMember ? (
             <div className="space-y-2">
               <Label>Add Member</Label>
-              <Input type="text" placeholder="Enter member email" />
+              <Input
+                type="text"
+                placeholder="Enter member email"
+                value={newMemberEmail}
+                onChange={(e) => setNewMemberEmail(e.target.value)}
+              />
+              <Button
+                variant="outline"
+                onClick={() => {
+                  handleAddMember(newMemberEmail);
+                  setIsAddingMember(false);
+                }}
+              >
+                Send
+              </Button>
             </div>
+          ) : (
+            <Button variant="outline" onClick={() => setIsAddingMember(true)}>
+              <PlusIcon />
+            </Button>
           )}
 
           {/* Action Buttons */}
