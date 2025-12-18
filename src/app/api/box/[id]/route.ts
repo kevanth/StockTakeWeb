@@ -1,5 +1,6 @@
 import { createClient } from "@/lib/supabase/server";
 import { NextResponse } from "next/server";
+import type { Box } from "@/types/models";
 
 export async function PUT(
   req: Request,
@@ -29,7 +30,12 @@ export async function PUT(
       throw new Error("Could not update box");
     }
 
-    const box = new Box(data.id, data.name, data.owner_id);
+    const box: Box = {
+      id: data.id,
+      name: data.name,
+      owner_id: data.owner_id,
+      created_at: data.created_at,
+    };
     return NextResponse.json({ box }, { status: 200 });
   } catch (error) {
     const message = error instanceof Error ? error.message : "Unknown error";

@@ -6,11 +6,9 @@ import { fetcher } from "@/lib/utils";
 import { Box, BoxWithMembers } from "@/types/models";
 
 export function useBoxes() {
-  const { data, error, isLoading, mutate } = useSWR<{ boxes: BoxWithMembers[] }>(
-    "/api/box",
-    fetcher,
-    { revalidateOnFocus: false }
-  );
+  const { data, error, isLoading, mutate } = useSWR<{
+    boxes: BoxWithMembers[];
+  }>("/api/box", fetcher, { revalidateOnFocus: false });
 
   const boxes = data?.boxes ?? [];
 
@@ -38,7 +36,7 @@ export function useBoxes() {
       const optimisticBox: BoxWithMembers = {
         id: `temp-${Date.now()}`,
         name: payload.name,
-        owner_id: "",
+        owner_id: "", // unknown at this point, will be replaced on real fetch
         created_at: new Date().toISOString(),
         members: [],
       };
