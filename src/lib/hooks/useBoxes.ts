@@ -117,6 +117,15 @@ export function useBoxes() {
     }
   }
 
+  async function addInviteMember(boxId: string, email: string) {
+    try {
+      //send api update to invited status table
+      //send email
+    } catch (error) {
+      console.error("Failed to invite member:", error);
+      throw error;
+    }
+
   return {
     boxes,
     boxesLoading: isLoading,
@@ -128,5 +137,6 @@ export function useBoxes() {
     updateBox,
     deleteBox,
     mutateBoxes: mutate,
+    addInviteMember,
   };
 }

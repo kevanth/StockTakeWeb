@@ -22,8 +22,15 @@ import { EditBoxDialog } from "./EditBoxDialog";
 export function AppSidebar() {
   const [isAddingBox, setIsAddingBox] = useState(false);
   const [newBoxName, setNewBoxName] = useState("");
-  const { boxes, activeBox, addBox, selectBox, updateBox, deleteBox } =
-    useBoxes();
+  const {
+    boxes,
+    activeBox,
+    addBox,
+    selectBox,
+    updateBox,
+    deleteBox,
+    inviteMember,
+  } = useBoxes() as any;
   const { user } = useUsers();
   const [boxDialog, setBoxDialog] = useState(false);
 
@@ -154,6 +161,7 @@ export function AppSidebar() {
         activeBox={activeBox}
         onUpdate={handleUpdateBox}
         onDelete={handleDeleteBox}
+        onInviteMember={inviteMember}
       />
     </div>
   );

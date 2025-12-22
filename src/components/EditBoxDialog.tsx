@@ -20,6 +20,7 @@ interface EditBoxDialogProps {
   activeBox: BoxWithMembers | null;
   onUpdate: (boxId: string, name: string) => Promise<void>;
   onDelete: (boxId: string) => Promise<void>;
+  onInviteMember: (boxId: string, email: string) => Promise<void>;
 }
 
 export function EditBoxDialog({
@@ -55,7 +56,7 @@ export function EditBoxDialog({
   const handleAddMember = async (email: string) => {
     if (!email.trim()) return;
     console.log("email", email);
-    // await onAddMember(activeBox.id, email.trim());
+    await onInviteMember(activeBox.id, email.trim());
     setNewMemberEmail("");
   };
 
