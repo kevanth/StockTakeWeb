@@ -14,7 +14,7 @@ import { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useBoxes } from "@/lib/hooks/useBoxes";
-import { Box } from "@/types/models";
+import { Box, BoxWithMembers } from "@/types/models";
 import { useUsers } from "@/lib/hooks/useUser";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import { EditBoxDialog } from "./EditBoxDialog";
@@ -72,7 +72,7 @@ export function AppSidebar() {
             <SidebarGroupLabel>Box Management</SidebarGroupLabel>
             <SidebarGroupContent>
               <SidebarMenu>
-                {boxes.map((box) => (
+                {boxes.map((box: BoxWithMembers) => (
                   <SidebarMenuItem key={box.id}>
                     <SidebarMenuButton
                       className={`truncate ${

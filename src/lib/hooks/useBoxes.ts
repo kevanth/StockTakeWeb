@@ -126,17 +126,18 @@ export function useBoxes() {
       throw error;
     }
 
-  return {
-    boxes,
-    boxesLoading: isLoading,
-    boxesError: error as Error | undefined,
-    activeBox,
-    activeBoxId,
-    selectBox,
-    addBox,
-    updateBox,
-    deleteBox,
-    mutateBoxes: mutate,
-    addInviteMember,
-  };
+    return {
+      boxes,
+      boxesLoading: isLoading,
+      boxesError: error as Error | undefined,
+      activeBox,
+      activeBoxId,
+      selectBox,
+      addBox,
+      updateBox,
+      deleteBox,
+      mutateBoxes: mutate,
+      addInviteMember,
+    };
+  }
 }
